@@ -1,10 +1,30 @@
 (() => {
   const header = document.querySelector('.site-header');
   const toggle = document.querySelector('[data-menu-toggle]');
-  const form = document.getElementById('auditForm');
+  const form = document.getElementById('contactForm');
   const success = document.getElementById('formSuccess');
   const error = document.getElementById('formError');
   const submit = form?.querySelector('button[type="submit"]');
+  const lang = document.documentElement.lang || 'en';
+
+  const messages = {
+    en: {
+      required: 'Please complete the required fields before submitting your request.',
+      sending: 'Sending your request…',
+      submit: 'Send my request',
+      fallback: 'We could not send your request right now. Please try again in a moment.',
+      network: 'A network error occurred. Please try again in a moment.'
+    },
+    fr: {
+      required: 'Veuillez remplir les champs obligatoires avant d’envoyer votre demande.',
+      sending: 'Envoi en cours…',
+      submit: 'Envoyer ma demande',
+      fallback: 'Nous n’avons pas pu envoyer votre demande pour le moment. Merci de réessayer dans un instant.',
+      network: 'Une erreur réseau est survenue. Merci de réessayer dans un instant.'
+    }
+  };
+
+  const t = messages[lang.startsWith('fr') ? 'fr' : 'en'];
 
   toggle?.addEventListener('click', () => {
     const isOpen = header.classList.toggle('menu-open');
@@ -40,18 +60,20 @@
     hideAlerts();
 
     const data = new FormData(form);
-    const website = (data.get('website') || '').toString().trim();
+    const firstName = (data.get('fname') || '').toString().trim();
+    const lastName = (data.get('lname') || '').toString().trim();
     const email = (data.get('email') || '').toString().trim();
+    const company = (data.get('company') || '').toString().trim();
 
-    if (!website || !email) {
-      showAlert(error, 'Please complete the required fields before submitting your request.');
+    if (!firstName || !lastName || !email || !company) {
+      showAlert(error, t.required);
       return;
     }
 
     if (submit) {
       submit.disabled = true;
       submit.dataset.original = submit.textContent;
-      submit.textContent = 'Sending your request…';
+      submit.textContent = t.sending;
     }
 
     try {
@@ -71,14 +93,13 @@
         return;
       }
 
-      const message = result.message || 'The form endpoint is not accepting submissions yet. Please activate FormSubmit from admin@novatvhub.com or contact us directly.';
-      showAlert(error, message);
+      showAlert(error, result.message || t.fallback);
     } catch (err) {
-      showAlert(error, 'Network error. Please try again, or email admin@novatvhub.com directly.');
+      showAlert(error, t.network);
     } finally {
       if (submit) {
         submit.disabled = false;
-        submit.textContent = submit.dataset.original || 'Request my free audit';
+        submit.textContent = submit.dataset.original || t.submit;
       }
     }
   });
