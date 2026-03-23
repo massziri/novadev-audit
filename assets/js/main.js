@@ -11,14 +11,14 @@
     en: {
       required: 'Please complete the required fields before submitting your request.',
       sending: 'Sending your request…',
-      submit: 'Send my request',
+      submit: 'Book my consultation',
       fallback: 'We could not send your request right now. Please try again in a moment.',
       network: 'A network error occurred. Please try again in a moment.'
     },
     fr: {
       required: 'Veuillez remplir les champs obligatoires avant d’envoyer votre demande.',
       sending: 'Envoi en cours…',
-      submit: 'Envoyer ma demande',
+      submit: 'Réserver ma consultation',
       fallback: 'Nous n’avons pas pu envoyer votre demande pour le moment. Merci de réessayer dans un instant.',
       network: 'Une erreur réseau est survenue. Merci de réessayer dans un instant.'
     }
@@ -79,9 +79,7 @@
     try {
       const response = await fetch('https://formsubmit.co/ajax/admin@novatvhub.com', {
         method: 'POST',
-        headers: {
-          'Accept': 'application/json'
-        },
+        headers: { 'Accept': 'application/json' },
         body: data
       });
 
