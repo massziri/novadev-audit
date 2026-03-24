@@ -16,10 +16,10 @@
       network: 'A network error occurred. Please try again in a moment.'
     },
     fr: {
-      required: 'Veuillez remplir les champs obligatoires avant d’envoyer votre demande.',
+      required: 'Veuillez remplir les champs obligatoires avant d\u2019envoyer votre demande.',
       sending: 'Envoi en cours…',
       submit: 'Réserver ma consultation',
-      fallback: 'Nous n’avons pas pu envoyer votre demande pour le moment. Merci de réessayer dans un instant.',
+      fallback: 'Nous n\u2019avons pas pu envoyer votre demande pour le moment. Merci de réessayer dans un instant.',
       network: 'Une erreur réseau est survenue. Merci de réessayer dans un instant.'
     }
   };
@@ -87,6 +87,7 @@
       const successFlag = result.success === true || result.success === 'true';
 
       if (response.ok && successFlag) {
+        fbq('track', 'Lead');
         window.location.href = 'thank-you.html';
         return;
       }
