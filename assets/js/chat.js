@@ -1,257 +1,214 @@
 (() => {
   'use strict';
 
-  // ── Config ────────────────────────────────────────────────────────────────
-  const LANG = 'en';
-  const FORM_ENDPOINT = 'https://formsubmit.co/ajax/admin@novatvhub.com';
+  // ─── Config ────────────────────────────────────────────────────────────────
+  const API_ENDPOINT    = '/api/chat';
+  const FORM_ENDPOINT   = 'https://formsubmit.co/ajax/admin@novatvhub.com';
+  const AUTO_OPEN_DELAY = 9000; // ms
 
-  // ── Lead state ────────────────────────────────────────────────────────────
-  const lead = { name: '', email: '', company: '', phone: '', service: '', message: '' };
-
-  // ── Conversation flow ─────────────────────────────────────────────────────
-  // Each step: { key, question, validate, quickReplies, type }
-  const STEPS = [
-    {
-      key: 'name',
-      question: "Hi there! 👋 I'm the Nova Dev assistant.\n\nI'd love to learn a bit about your project so the right person can follow up with you.\n\nWhat's your first name?",
-      validate: v => v.trim().length >= 2,
-      errorMsg: "Please enter your name (at least 2 characters)."
-    },
-    {
-      key: 'service',
-      question: name => `Nice to meet you, ${name}! 😊\n\nWhat type of project are you looking to get help with?`,
-      validate: v => v.trim().length >= 2,
-      quickReplies: [
-        "Premium website",
-        "Website redesign",
-        "Mobile app",
-        "E-commerce",
-        "Landing page",
-        "Not sure yet"
-      ]
-    },
-    {
-      key: 'company',
-      question: "Great choice! What's the name of your company or brand?",
-      validate: v => v.trim().length >= 2,
-      errorMsg: "Please enter your company or brand name."
-    },
-    {
-      key: 'email',
-      question: "What's the best email address to reach you?",
-      validate: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
-      errorMsg: "Please enter a valid email address."
-    },
-    {
-      key: 'phone',
-      question: "And your phone number? (optional — you can type 'skip' to continue)",
-      validate: () => true // optional
-    },
-    {
-      key: 'message',
-      question: "Last one! Briefly describe your project or what you'd like to achieve — even a sentence or two helps.",
-      validate: v => v.trim().length >= 3,
-      errorMsg: "Please share a few words about your project."
-    }
-  ];
-
-  // ── DOM elements ──────────────────────────────────────────────────────────
-  const bubble = document.getElementById('ai-chat-bubble');
+  // ─── DOM ───────────────────────────────────────────────────────────────────
+  const bubble     = document.getElementById('ai-chat-bubble');
   const chatWindow = document.getElementById('ai-chat-window');
-  const closeBtn = document.getElementById('ai-chat-close');
+  const closeBtn   = document.getElementById('ai-chat-close');
   const messagesEl = document.getElementById('chat-messages');
-  const inputEl = document.getElementById('chat-input');
-  const sendBtn = document.getElementById('chat-send');
-  const badge = bubble?.querySelector('.chat-badge');
+  const inputEl    = document.getElementById('chat-input');
+  const sendBtn    = document.getElementById('chat-send');
+  const badge      = bubble?.querySelector('.chat-badge');
 
-  if (!bubble || !chatWindow) return;
+  if (!bubble || !chatWindow || !messagesEl) return;
 
-  // ── State ─────────────────────────────────────────────────────────────────
-  let isOpen = false;
-  let stepIndex = 0;
-  let waitingForInput = false;
-  let submitted = false;
-  let opened = false;
+  // ─── State ─────────────────────────────────────────────────────────────────
+  let isOpen      = false;
+  let isTyping    = false;
+  let opened      = false;
 
-  // ── Helpers ───────────────────────────────────────────────────────────────
-  const now = () => {
+  // Conversation history sent to the AI (role: user | assistant)
+  const history   = [];
+
+  // Lead info extracted progressively from conversation
+  const lead      = { name: '', email: '', company: '', phone: '', service: '', message: '' };
+
+  // ─── Lead extraction patterns ──────────────────────────────────────────────
+  const emailRx   = /\b[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}\b/;
+  const phoneRx   = /(\+?\d[\d\s\-().]{7,15}\d)/;
+
+  function extractLeadData(text) {
+    const emailMatch = text.match(emailRx);
+    if (emailMatch && !lead.email) {
+      lead.email = emailMatch[0];
+    }
+    const phoneMatch = text.match(phoneRx);
+    if (phoneMatch && !lead.phone) {
+      lead.phone = phoneMatch[0];
+    }
+    // Service keywords
+    if (!lead.service) {
+      const lower = text.toLowerCase();
+      if (lower.includes('mobile app') || lower.includes('ios') || lower.includes('android')) lead.service = 'Mobile app development';
+      else if (lower.includes('e-commerce') || lower.includes('ecommerce') || lower.includes('shop')) lead.service = 'E-commerce';
+      else if (lower.includes('redesign') || lower.includes('refonte')) lead.service = 'Website redesign';
+      else if (lower.includes('landing')) lead.service = 'Landing page';
+      else if (lower.includes('website') || lower.includes('site web')) lead.service = 'Website';
+    }
+  }
+
+  // After AI response, try to pull name if AI greeted user
+  function extractNameFromContext(botText, userText) {
+    if (!lead.name) {
+      // Look for patterns like "Nice to meet you, John" or "Great, John!"
+      const nameFromBot = botText.match(/(?:nice to meet you|great to meet you|hello|hi),?\s+([A-Z][a-z]{1,20})/i);
+      if (nameFromBot) lead.name = nameFromBot[1];
+      // If user said "I'm John" or "My name is John"
+      const nameFromUser = userText.match(/(?:i(?:'|')?m|my name is|call me|i am)\s+([A-Z][a-z]{1,20})/i);
+      if (nameFromUser) lead.name = nameFromUser[1];
+      // Single-word response that looks like a name (≤20 chars, capitalised)
+      const single = userText.trim();
+      if (!lead.name && /^[A-Z][a-z]{1,19}$/.test(single)) lead.name = single;
+    }
+  }
+
+  function maybeSendLead() {
+    if (lead.email && lead.name && !lead._sent) {
+      lead._sent = true;
+      sendLeadToFormSubmit().catch(() => {});
+    }
+  }
+
+  async function sendLeadToFormSubmit() {
+    const fd = new FormData();
+    fd.append('_subject', `Nova Dev Chat Lead (EN) — ${lead.name || 'Unknown'}`);
+    fd.append('_captcha', 'false');
+    fd.append('_template', 'table');
+    fd.append('Name',            lead.name    || '');
+    fd.append('Email',           lead.email   || '');
+    fd.append('Company',         lead.company || '');
+    fd.append('Phone',           lead.phone   || 'Not provided');
+    fd.append('Service Interest',lead.service || '');
+    fd.append('Project Details', lead.message || '');
+    fd.append('Source',          'AI Chat Widget — Nova Dev EN');
+    await fetch(FORM_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: fd
+    });
+    if (typeof fbq === 'function') { try { fbq('track', 'Lead'); } catch(_){} }
+  }
+
+  // ─── Helpers ───────────────────────────────────────────────────────────────
+  const clock = () => {
     const d = new Date();
-    return `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+    return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
   };
 
-  const scrollToBottom = () => {
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-  };
+  const scrollDown = () => { messagesEl.scrollTop = messagesEl.scrollHeight; };
 
-  const createMsg = (text, type) => {
-    const wrapper = document.createElement('div');
-    wrapper.className = `chat-msg ${type}`;
+  function appendMsg(text, role) {
+    const wrap = document.createElement('div');
+    wrap.className = `chat-msg ${role}`;
 
-    const bubble = document.createElement('div');
-    bubble.className = 'chat-bubble';
-    bubble.textContent = text;
+    const bub = document.createElement('div');
+    bub.className = 'chat-bubble';
+    // Support line breaks in text
+    bub.innerHTML = text.replace(/\n/g, '<br>');
 
-    const time = document.createElement('div');
-    time.className = 'chat-time';
-    time.textContent = now();
+    const ts = document.createElement('div');
+    ts.className = 'chat-time';
+    ts.textContent = clock();
 
-    wrapper.appendChild(bubble);
-    wrapper.appendChild(time);
-    return wrapper;
-  };
+    wrap.appendChild(bub);
+    wrap.appendChild(ts);
+    messagesEl.appendChild(wrap);
+    scrollDown();
+    return wrap;
+  }
 
-  const addMsg = (text, type, delay = 0) => {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        const msg = createMsg(text, type);
-        messagesEl.appendChild(msg);
-        scrollToBottom();
-        resolve();
-      }, delay);
-    });
-  };
+  let typingEl = null;
+  function showTypingIndicator() {
+    if (typingEl) return;
+    typingEl = document.createElement('div');
+    typingEl.className = 'chat-msg bot';
+    typingEl.id = 'chat-typing-indicator';
+    typingEl.innerHTML = '<div class="chat-typing"><span></span><span></span><span></span></div>';
+    messagesEl.appendChild(typingEl);
+    scrollDown();
+  }
+  function hideTypingIndicator() {
+    if (typingEl) { typingEl.remove(); typingEl = null; }
+  }
 
-  const showTyping = () => {
-    const el = document.createElement('div');
-    el.className = 'chat-msg bot';
-    el.id = 'chat-typing-indicator';
-    el.innerHTML = `<div class="chat-typing"><span></span><span></span><span></span></div>`;
-    messagesEl.appendChild(el);
-    scrollToBottom();
-    return el;
-  };
+  // ─── AI call ───────────────────────────────────────────────────────────────
+  async function askAI(userMessage) {
+    if (isTyping) return;
+    isTyping = true;
+    setInputEnabled(false);
 
-  const hideTyping = () => {
-    const el = document.getElementById('chat-typing-indicator');
-    if (el) el.remove();
-  };
+    // Add user message to UI & history
+    appendMsg(userMessage, 'user');
+    history.push({ role: 'user', content: userMessage });
 
-  const botSay = (text, delay = 600) => {
-    return new Promise(resolve => {
-      const typing = showTyping();
-      setTimeout(async () => {
-        typing.remove();
-        await addMsg(text, 'bot');
-        resolve();
-      }, delay);
-    });
-  };
+    // Extract lead data from user message
+    extractLeadData(userMessage);
 
-  const addQuickReplies = (replies) => {
-    const existing = messagesEl.querySelector('.chat-quick-btns');
-    if (existing) existing.remove();
-
-    const row = document.createElement('div');
-    row.className = 'chat-quick-btns';
-    replies.forEach(label => {
-      const btn = document.createElement('button');
-      btn.className = 'chat-quick-btn';
-      btn.textContent = label;
-      btn.addEventListener('click', () => {
-        row.remove();
-        handleUserInput(label);
-      });
-      row.appendChild(btn);
-    });
-    messagesEl.appendChild(row);
-    scrollToBottom();
-  };
-
-  // ── Form submission ───────────────────────────────────────────────────────
-  const submitLead = async () => {
-    const formData = new FormData();
-    formData.append('_subject', 'Nova Dev Chat Lead (EN)');
-    formData.append('_captcha', 'false');
-    formData.append('_template', 'table');
-    formData.append('fname', lead.name);
-    formData.append('company', lead.company);
-    formData.append('email', lead.email);
-    formData.append('phone', lead.phone || 'Not provided');
-    formData.append('service', lead.service);
-    formData.append('message', lead.message);
-    formData.append('source', 'AI Chat Widget');
+    // Show typing
+    showTypingIndicator();
 
     try {
-      await fetch(FORM_ENDPOINT, {
+      const resp = await fetch(API_ENDPOINT, {
         method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: formData
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: history, lead })
       });
-    } catch (_) { /* silent — still thank user */ }
 
-    // Try pixel if available
-    if (typeof fbq === 'function') {
-      try { fbq('track', 'Lead'); } catch (_) {}
+      let reply;
+      if (resp.ok) {
+        const data = await resp.json();
+        reply = data.reply || "I'm having trouble responding right now. Please try the contact form below!";
+      } else {
+        reply = "I'm having a little technical hiccup. Please use the contact form below and we'll reach out shortly!";
+      }
+
+      hideTypingIndicator();
+      appendMsg(reply, 'bot');
+      history.push({ role: 'assistant', content: reply });
+
+      // Extract name from context
+      extractNameFromContext(reply, userMessage);
+      // Also extract lead from bot reply (e.g. if bot echoes email)
+      extractLeadData(reply);
+      maybeSendLead();
+
+    } catch (err) {
+      hideTypingIndicator();
+      const fallback = "Connection issue on my end. You can reach us directly via the contact form below — we respond fast!";
+      appendMsg(fallback, 'bot');
+      history.push({ role: 'assistant', content: fallback });
+    } finally {
+      isTyping = false;
+      setInputEnabled(true);
+      inputEl?.focus();
     }
-  };
+  }
 
-  // ── Conversation engine ───────────────────────────────────────────────────
-  const askStep = async (index) => {
-    if (index >= STEPS.length) {
-      // All collected — submit
-      await botSay("Perfect, thank you! 🎉 Let me send your details to our team…", 700);
-      await submitLead();
-      submitted = true;
-      setInputEnabled(false);
-      await botSay(`We've received everything, ${lead.name}. 📬\n\nA member of the Nova Dev team will be in touch with you at ${lead.email} very soon.\n\nIn the meantime, feel free to browse the site — there's plenty to explore!`, 900);
-      return;
-    }
+  // ─── Opening greeting (no API call) ────────────────────────────────────────
+  function showGreeting() {
+    setTimeout(() => {
+      showTypingIndicator();
+      setTimeout(() => {
+        hideTypingIndicator();
+        const msg = "Hi there! 👋 I'm the Nova Dev assistant.\n\nI can answer any questions about our web design, development and mobile app services — or help you get started on your project.\n\nWhat can I help you with today?";
+        appendMsg(msg, 'bot');
+        history.push({ role: 'assistant', content: msg });
+      }, 900);
+    }, 300);
+  }
 
-    const step = STEPS[index];
-    const questionText = typeof step.question === 'function'
-      ? step.question(lead.name || 'there')
-      : step.question;
+  // ─── UI controls ───────────────────────────────────────────────────────────
+  function setInputEnabled(on) {
+    if (inputEl) inputEl.disabled = !on;
+    if (sendBtn) sendBtn.disabled = !on;
+  }
 
-    await botSay(questionText, index === 0 ? 400 : 700);
-
-    if (step.quickReplies) {
-      addQuickReplies(step.quickReplies);
-    }
-
-    waitingForInput = true;
-    inputEl?.focus();
-  };
-
-  const handleUserInput = async (rawValue) => {
-    if (!waitingForInput || submitted) return;
-    const value = rawValue.trim();
-    if (!value) return;
-
-    // Remove quick replies
-    const qr = messagesEl.querySelector('.chat-quick-btns');
-    if (qr) qr.remove();
-
-    // Add user message
-    await addMsg(value, 'user');
-    inputEl.value = '';
-    waitingForInput = false;
-
-    const step = STEPS[stepIndex];
-
-    // Handle skip for optional fields
-    const isSkip = value.toLowerCase() === 'skip';
-
-    if (!isSkip && step.validate && !step.validate(value)) {
-      const errMsg = step.errorMsg || "That doesn't look quite right. Could you try again?";
-      await botSay(errMsg, 500);
-      waitingForInput = true;
-      if (step.quickReplies) addQuickReplies(step.quickReplies);
-      return;
-    }
-
-    // Store value
-    lead[step.key] = isSkip ? '' : value;
-    stepIndex++;
-    await askStep(stepIndex);
-  };
-
-  // ── UI controls ───────────────────────────────────────────────────────────
-  const setInputEnabled = (enabled) => {
-    if (inputEl) inputEl.disabled = !enabled;
-    if (sendBtn) sendBtn.disabled = !enabled;
-  };
-
-  const openChat = async () => {
+  function openChat() {
     if (isOpen) return;
     isOpen = true;
     chatWindow.removeAttribute('hidden');
@@ -260,42 +217,41 @@
 
     if (!opened) {
       opened = true;
-      // Small delay before first bot message
-      await askStep(0);
+      showGreeting();
     }
     inputEl?.focus();
-  };
+  }
 
-  const closeChat = () => {
+  function closeChat() {
     isOpen = false;
     chatWindow.setAttribute('hidden', '');
     bubble.setAttribute('aria-expanded', 'false');
-  };
+  }
 
-  // ── Event listeners ───────────────────────────────────────────────────────
+  function handleSend() {
+    const val = inputEl?.value.trim();
+    if (!val || isTyping) return;
+    inputEl.value = '';
+    askAI(val);
+  }
+
+  // ─── Events ────────────────────────────────────────────────────────────────
   bubble.addEventListener('click', openChat);
-  bubble.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openChat(); } });
+  bubble.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openChat(); }
+  });
   closeBtn?.addEventListener('click', closeChat);
-
-  sendBtn?.addEventListener('click', () => {
-    if (inputEl?.value.trim()) handleUserInput(inputEl.value);
-  });
-
+  sendBtn?.addEventListener('click', handleSend);
   inputEl?.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      if (inputEl.value.trim()) handleUserInput(inputEl.value);
-    }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
   });
-
-  // Close on ESC
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && isOpen) closeChat();
   });
 
-  // ── Auto-open after 8 seconds ─────────────────────────────────────────────
+  // ─── Auto-open ─────────────────────────────────────────────────────────────
   setTimeout(() => {
     if (!isOpen && !opened) openChat();
-  }, 8000);
+  }, AUTO_OPEN_DELAY);
 
 })();
