@@ -2,8 +2,9 @@
   'use strict';
 
   /* ============================================================
-     NOVA DEV — Intelligent AI Chat (client-side, no API key)
-     Handles any question about the agency + captures leads
+     NOVA DEV — Smart AI Chat with Negotiation Intelligence
+     Handles questions, negotiates pricing, captures leads
+     Never repeats the same response twice
   ============================================================ */
 
   const FORM_ENDPOINT   = 'https://formsubmit.co/ajax/admin@novatvhub.com';
@@ -24,6 +25,26 @@
   const lead = { name:'', email:'', company:'', phone:'', service:'', message:'' };
   let leadSent = false;
 
+  /* ── Conversation Memory (anti-repetition) ───────────────── */
+  const usedResponses = new Set();
+  const conversationHistory = [];  // track intents sequence
+  let negotiationStage = 0;        // 0=none, 1=first objection, 2=second, 3=final offer
+  let lastIntent = '';
+  let lastBotReply = '';
+  let priceDiscussedFor = '';      // which service price was discussed
+
+  function pickFresh(arr) {
+    // Pick a response not used before; if all used, clear and start over
+    const available = arr.filter(r => !usedResponses.has(r));
+    if (available.length === 0) {
+      arr.forEach(r => usedResponses.delete(r));
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+    const pick = available[Math.floor(Math.random() * available.length)];
+    usedResponses.add(pick);
+    return pick;
+  }
+
   /* ── KNOWLEDGE BASE ──────────────────────────────────────── */
   const KB = {
     services: [
@@ -37,11 +58,11 @@
     ],
 
     pricing: {
-      general: "Our pricing varies by scope and complexity. A landing page typically starts from £800–£1,500. A full business website ranges from £2,500–£8,000+. Mobile apps start from £5,000 depending on features. We provide detailed quotes after a free consultation — no guesswork.",
-      landing: "A landing page project typically starts from £800–£1,500 depending on design complexity and integrations.",
-      website: "A full business website generally ranges from £2,500 to £8,000+, depending on the number of pages, features and custom functionality required.",
-      mobile:  "Mobile app development typically starts from £5,000–£15,000+ depending on platform (iOS, Android or both), feature set and back-end requirements.",
-      ecom:    "E-commerce projects typically start from £3,000–£10,000+ depending on the platform, product volume and custom integrations needed.",
+      general: "Our pricing is designed to be accessible for businesses of all sizes. A professional website starts from just $150, with options to scale based on your specific needs. Mobile apps start from $200. We always provide a detailed, transparent quote after understanding your project — no surprises.",
+      landing: "A landing page starts from $150, depending on design complexity and integrations needed. It's a smart, affordable way to start generating leads.",
+      website: "A full business website starts from $150 and scales based on the number of pages, features and custom functionality you need. We work with every budget to deliver the best possible result.",
+      mobile:  "Mobile app development starts from $200 depending on platform (iOS, Android or both), features and back-end requirements. We'll scope it precisely during your free consultation.",
+      ecom:    "E-commerce projects start from $300 depending on the platform, product volume and custom integrations. We'll find the best solution within your budget.",
     },
 
     timeline: {
@@ -76,13 +97,90 @@
     revisions: "Absolutely. Our projects include revision rounds built in. We share designs and prototypes for your feedback before development begins, and we refine until you're satisfied.",
   };
 
-  /* ── INTENT DETECTION ────────────────────────────────────── */
+  /* ── NEGOTIATION RESPONSES (multi-stage, never repeats) ──── */
+  const NEGOTIATION = {
+    // Stage 1: First time client says expensive/too much
+    firstObjection: {
+      general: [
+        "I completely understand — budget is important. The good news is we're actually one of the most affordable premium agencies out there. Our websites start from just $150, which is significantly lower than industry average. What kind of project do you have in mind? I can give you a more specific idea.",
+        "That's a fair concern! Many clients are surprised by how affordable we are. We start at $150 for websites and $200 for mobile apps — much less than most agencies. What's your budget range? I'd love to find a solution that works for you.",
+        "I appreciate the honesty! Let me clarify — our pricing is actually very competitive. Professional websites start from $150 and mobile apps from $200. Most of our clients are pleasantly surprised. Tell me about your project and I'll give you a tailored estimate.",
+      ],
+      web: [
+        "I hear you! But here's the thing — our websites actually start from just $150. That's far more affordable than most agencies charging $2,000+. We keep costs low without cutting corners on quality. What features are most important for your project?",
+        "Budget matters, absolutely. Our website development starts at $150 — that includes professional design, responsive development and testing. We can work within your budget. What are you looking to build?",
+        "I understand the concern! But at $150 starting price for a full website, we're actually very budget-friendly. Many agencies charge 10x that. What's your ideal budget? Let's see what we can create for you.",
+      ],
+      mobile: [
+        "I get it — apps can sound pricey. But our mobile app development starts from just $200, which is incredibly competitive. Most agencies charge $5,000+. What kind of app are you thinking about?",
+        "Totally fair concern! Our mobile apps start at $200 — that's a fraction of what most studios charge. We believe quality shouldn't be expensive. Tell me about your app idea and I'll scope it out for you.",
+        "I understand! But our app development actually starts from $200 — way below industry rates. We've made premium development accessible. What features does your app need?",
+      ],
+    },
+
+    // Stage 2: Client pushes back again
+    secondObjection: [
+      "I really want to make this work for you. How about this — tell me exactly what you need, and I'll put together a custom quote that fits your budget. We're flexible and we genuinely want to help your business grow. What's a comfortable budget range for you?",
+      "Let's find a middle ground. We can always start with an MVP — a lean version with the core features — and expand from there. This way you get online faster, spend less upfront, and grow the project over time. What are the must-have features for you?",
+      "I want to be transparent — we're already among the most affordable agencies with premium quality. But I understand every dollar counts. If you share your budget, I can design a package that maximizes value within it. We've done this many times for our clients.",
+      "Here's what many smart clients do: start with a focused first phase — the essentials — then add features as the business generates revenue. This way the project pays for itself. Would that approach work for you?",
+    ],
+
+    // Stage 3: Final offer / closing
+    finalOffer: [
+      "Alright, let me do something special. If you're ready to get started, I can connect you directly with our project lead for a free consultation. We'll find the absolute best solution for your budget — we've never turned away a serious client. Share your email and we'll set it up today.",
+      "Here's what I'll do — I'll have our team prepare a no-obligation custom proposal specifically for your budget and needs. We always find a way to make it work. Just share your email and we'll send it within 24 hours.",
+      "I respect that you know your budget. Let me connect you with our team directly — they can offer flexible payment plans and phased delivery options that make it very manageable. What's the best email to reach you?",
+    ],
+
+    // Specific price comparison responses
+    comparison: [
+      "Compared to other agencies, we're genuinely one of the most affordable. Most charge $2,000–$10,000+ for what we deliver starting at $150. We've optimized our process to pass savings to our clients without sacrificing quality.",
+      "If you've been quoted by other agencies, you'll see we're a fraction of the cost. Our $150 starting price for websites is possible because we've streamlined our workflow — not because we cut corners. Same premium quality, much lower price.",
+      "Let me put it in perspective: a freelancer might charge similar, but without the strategic thinking, testing and support we include. And other agencies charge 5-20x more. We're the sweet spot of quality and affordability.",
+    ],
+
+    // Value justification
+    value: [
+      "What you're getting at $150 isn't just a website — it's a strategic digital asset designed to attract customers and grow your business. That's an investment that can generate thousands in return.",
+      "Think of it this way: a well-built website pays for itself many times over. At $150, you're investing less than a single day's revenue for most businesses, but getting a tool that works 24/7 for months and years.",
+      "For context, a single Google ad click can cost $5–50. Your website at $150 is a permanent asset that keeps bringing in customers without ongoing ad spend. It's one of the smartest investments you can make.",
+    ],
+
+    // Discount hints
+    discount: [
+      "We sometimes offer package deals when clients bundle multiple services. For example, a website + landing page combo could come with a discount. Want me to explore that?",
+      "For clients who are ready to start quickly, we occasionally offer early-commitment pricing. Share your project details and I'll see what we can do.",
+      "We do offer flexible packages. If we know your full project scope, we can often find ways to deliver more value within your budget. What exactly do you need?",
+    ],
+  };
+
+  /* ── INTENT DETECTION (enhanced with negotiation) ────────── */
   function detectIntent(text) {
     const t = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
     const is = (...kw) => kw.some(k => t.includes(k));
 
-    if (is('price','cost','how much','budget','charge','fee','rate','invest','afford','expensive','cheap','quote','pricing')) return 'price';
+    // Negotiation & price objections (check FIRST, before general price)
+    if (is('expensive','too much','too high','overpriced','can\'t afford','cannot afford',
+           'out of budget','over budget','lower price','reduce','discount','cheaper',
+           'less','too costly','pricey','not worth','rip off','ripoff','way too',
+           'that\'s a lot','thats a lot','are you kidding','seriously?','no way',
+           'i can get','someone else','other agency','competitor','freelancer',
+           'fiverr','upwork','lower','negotiate','deal','offer','bargain',
+           'money','tight budget','limited budget','small budget','not in budget',
+           'budget is','my budget','only have','can only','afford')) return 'negotiate';
+
+    // Asking for discount specifically
+    if (is('discount','coupon','promo','promotion','special offer','special price','deal')) return 'discount';
+
+    // Value question
+    if (is('worth it','why pay','what do i get','what\'s included','included','justify','value for money','roi','return on investment')) return 'value';
+
+    // Price comparison
+    if (is('compared to','other agencies','competitors','average price','market rate','industry','benchmark','how do you compare')) return 'comparison';
+
+    if (is('price','cost','how much','budget','charge','fee','rate','invest','quote','pricing')) return 'price';
     if (is('how long','timeline','deadline','deliver','time','week','month','turnaround','when','duration','fast','quick')) return 'timeline';
     if (is('mobile app','android','ios','iphone','flutter','react native','app develop','application','smartphone','tablet app')) return 'mobile';
     if (is('e-commerce','ecommerce','online shop','shopify','woocommerce','store','sell online','product','cart','checkout')) return 'ecom';
@@ -112,35 +210,85 @@
     return 'unknown';
   }
 
-  /* ── RESPONSE GENERATION ─────────────────────────────────── */
-  const nameList  = [];   // track conversation turns
-  let askedName   = false;
-  let askedEmail  = false;
-  let turnCount   = 0;
+  /* ── RESPONSE GENERATION (with variety & negotiation) ────── */
+  let askedName = false, askedEmail = false, turnCount = 0;
 
-  // Extract email & phone from text
-  function mineData(text) {
+  // Multi-response pools for common intents (anti-repetition)
+  const RESPONSE_POOLS = {
+    greeting_new: [
+      "Hey there! 👋 Great to chat — what can I help you with today? Feel free to ask anything about our services, pricing, timelines or how we work.",
+      "Hi! 👋 Welcome to Nova Dev. I'm here to help with anything — web design, app development, pricing, timelines... What's on your mind?",
+      "Hello! 👋 Nice to have you here. Whether you're exploring options or ready to start a project, I'm here to help. What would you like to know?",
+    ],
+    greeting_known: [
+      "Hey {name}! Great to hear from you again. What can I help you with?",
+      "Welcome back, {name}! 😊 How can I assist you today?",
+      "Hi {name}! Good to see you. What's on your mind?",
+    ],
+    thanks_new: [
+      "You're welcome! 😊 Is there anything else you'd like to know?",
+      "Happy to help! 😊 Let me know if you have more questions.",
+      "Glad I could help! Anything else on your mind?",
+    ],
+    thanks_known: [
+      "You're very welcome, {name}! 😊 Anything else I can help you with?",
+      "My pleasure, {name}! 😊 Feel free to ask anything else.",
+      "Anytime, {name}! What else can I do for you?",
+    ],
+    bye_new: [
+      "Thanks for stopping by! When you're ready to discuss your project, we'd love to hear from you. 👋",
+      "It was great chatting! Come back anytime you're ready to move forward. 👋",
+      "Take care! We're always here when you need us. 👋",
+    ],
+    bye_known: [
+      "Talk soon, {name}! If you ever want to kick off a project, we're just a message away. 👋",
+      "See you soon, {name}! Don't hesitate to reach out when you're ready. 👋",
+      "Bye {name}! Wishing you the best — we'd love to work with you soon. 👋",
+    ],
+    unknown_short: [
+      "Could you tell me a bit more? I want to make sure I give you the most helpful answer. 😊",
+      "I'd love to help — can you give me a little more detail on what you're looking for?",
+      "Can you elaborate a bit? I want to give you the best possible answer.",
+    ],
+    unknown_long: [
+      "That's a great question! To give you the most accurate answer, could you share a bit more context about your project? I'm here to help with anything — services, pricing, timelines, technology or how we work.",
+      "Interesting! I want to make sure I point you in the right direction. Could you share more about what you're looking for? I can help with services, pricing, project planning and more.",
+      "I'd love to help you with that. For the best answer, could you tell me a bit more about your project needs? I cover everything from web development to mobile apps.",
+    ],
+    price_follow_up: [
+      "Would you like a specific quote for your project?",
+      "Want me to help you estimate the cost for your specific needs?",
+      "I can help you get a precise quote — just tell me more about what you need.",
+      "Shall I connect you with our team for a detailed, no-obligation quote?",
+    ],
+  };
+
+  function personalize(text) {
+    return lead.name ? text.replace(/\{name\}/g, lead.name) : text;
+  }
+
+  function pickFromPool(poolKey) {
+    return personalize(pickFresh(RESPONSE_POOLS[poolKey]));
+  }
+
+  function extractData(text) {
     const emailMatch = text.match(/\b[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}\b/);
     if (emailMatch && !lead.email) lead.email = emailMatch[0];
 
     const phoneMatch = text.match(/(\+?\d[\d\s\-().]{7,}\d)/);
     if (phoneMatch && !lead.phone) lead.phone = phoneMatch[0].trim();
 
-    // Name: "I'm X" / "my name is X" / "this is X" / "call me X"
     const nameMatch = text.match(/(?:i(?:'|')?m|my name is|i am|this is|call me)\s+([A-Z][a-z]{1,20})/i);
     if (nameMatch && !lead.name) lead.name = nameMatch[1];
 
-    // Single capitalised word as name (if we asked)
     if (!lead.name && askedName) {
       const single = text.trim().split(/\s+/);
       if (single.length <= 2 && /^[A-Z][a-z]+/.test(single[0])) lead.name = single[0];
     }
 
-    // Company: "company is X" / "work at X" / "from X"
     const compMatch = text.match(/(?:company(?:\s+is)?|work(?:ing)? (?:at|for)|from|at)\s+([A-Za-z0-9 &.,'-]{2,30})/i);
     if (compMatch && !lead.company) lead.company = compMatch[1].trim();
 
-    // Service keywords for form
     if (!lead.service) {
       const lower = text.toLowerCase();
       if (lower.includes('mobile app') || lower.includes('android') || lower.includes('ios')) lead.service = 'Mobile App Development';
@@ -152,43 +300,65 @@
     }
   }
 
-  // Build a natural follow-up nudge
   function leadNudge() {
     if (!lead.name && !askedName && turnCount >= 2) {
       askedName = true;
-      return "\n\nBy the way, I didn't catch your name — who am I speaking with?";
+      return pickFresh([
+        "\n\nBy the way, I didn't catch your name — who am I speaking with?",
+        "\n\nI'd love to make this more personal — what's your name?",
+        "\n\nBy the way, who do I have the pleasure of chatting with?",
+      ]);
     }
     if (lead.name && !lead.email && !askedEmail && turnCount >= 3) {
       askedEmail = true;
-      return `\n\nThanks, ${lead.name}! If you'd like us to follow up personally, what's the best email to reach you?`;
+      return pickFresh([
+        `\n\nThanks, ${lead.name}! If you'd like us to follow up personally, what's the best email to reach you?`,
+        `\n\n${lead.name}, if you'd like a detailed quote, just share your email and we'll send one over.`,
+        `\n\nBy the way ${lead.name}, want us to email you some more details? What's your best email?`,
+      ]);
     }
     return '';
   }
 
+  function getNegotiationResponse() {
+    negotiationStage++;
+    const serviceKey = lead.service?.toLowerCase().includes('mobile') ? 'mobile' :
+                       lead.service?.toLowerCase().includes('app') ? 'mobile' : 'general';
+
+    if (negotiationStage === 1) {
+      // First objection — clarify actual low price
+      const pool = serviceKey === 'mobile' ?
+        NEGOTIATION.firstObjection.mobile :
+        (serviceKey === 'web' ? NEGOTIATION.firstObjection.web : NEGOTIATION.firstObjection.general);
+      return pickFresh(pool);
+    } else if (negotiationStage === 2) {
+      // Second pushback — offer flexibility
+      return pickFresh(NEGOTIATION.secondObjection);
+    } else {
+      // Third+ — final offer, try to close
+      return pickFresh(NEGOTIATION.finalOffer);
+    }
+  }
+
   function generateReply(userText) {
-    mineData(userText);
+    extractData(userText);
     turnCount++;
 
     const intent = detectIntent(userText);
+    conversationHistory.push(intent);
     let reply = '';
 
     switch (intent) {
       case 'greeting':
-        reply = lead.name
-          ? `Hey ${lead.name}! Great to hear from you again. What can I help you with?`
-          : "Hey there! 👋 Great to chat — what can I help you with today? Feel free to ask anything about our services, pricing, timelines or how we work.";
+        reply = lead.name ? pickFromPool('greeting_known') : pickFromPool('greeting_new');
         break;
 
       case 'thanks':
-        reply = lead.name
-          ? `You're very welcome, ${lead.name}! 😊 Anything else I can help you with?`
-          : "You're welcome! 😊 Is there anything else you'd like to know?";
+        reply = lead.name ? pickFromPool('thanks_known') : pickFromPool('thanks_new');
         break;
 
       case 'bye':
-        reply = lead.name
-          ? `Talk soon, ${lead.name}! If you ever want to kick off a project, we're just a message away. 👋`
-          : "Thanks for stopping by! When you're ready to discuss your project, we'd love to hear from you. 👋";
+        reply = lead.name ? pickFromPool('bye_known') : pickFromPool('bye_new');
         break;
 
       case 'about':
@@ -211,6 +381,7 @@
 
       case 'web':
         reply = KB.services.find(s => s.id === 'web').desc;
+        if (!lead.service) lead.service = 'Website Development';
         break;
 
       case 'mobile':
@@ -231,7 +402,7 @@
 
       case 'redesign':
         reply = KB.services.find(s => s.id === 'rebrand').desc
-          + "\n\nMost redesigns take 3–5 weeks and start from £2,000 depending on scope.";
+          + "\n\nMost redesigns start from $150 depending on scope and take 3–5 weeks.";
         if (!lead.service) lead.service = 'Website Redesign';
         break;
 
@@ -254,13 +425,29 @@
         break;
 
       case 'price':
-        // Try to be specific based on what's been mentioned
         if (lead.service?.includes('Mobile')) reply = KB.pricing.mobile;
         else if (lead.service?.includes('E-commerce')) reply = KB.pricing.ecom;
         else if (lead.service?.includes('Landing')) reply = KB.pricing.landing;
         else if (lead.service?.includes('Website') || lead.service?.includes('Redesign')) reply = KB.pricing.website;
         else reply = KB.pricing.general;
-        reply += "\n\nWould you like a specific quote for your project?";
+        reply += '\n\n' + pickFresh(RESPONSE_POOLS.price_follow_up);
+        priceDiscussedFor = lead.service || 'general';
+        break;
+
+      case 'negotiate':
+        reply = getNegotiationResponse();
+        break;
+
+      case 'discount':
+        reply = pickFresh(NEGOTIATION.discount);
+        break;
+
+      case 'value':
+        reply = pickFresh(NEGOTIATION.value);
+        break;
+
+      case 'comparison':
+        reply = pickFresh(NEGOTIATION.comparison);
         break;
 
       case 'timeline':
@@ -304,15 +491,28 @@
         break;
 
       default:
-        // Smart fallback — try to give something relevant
-        if (userText.length < 15) {
-          reply = "Could you tell me a bit more? I want to make sure I give you the most helpful answer. 😊";
+        // Check if it looks like a repeated question or follow-up argument
+        if (lastIntent === 'negotiate' || lastIntent === 'price') {
+          // Treat continued conversation after price/negotiate as further negotiation
+          reply = getNegotiationResponse();
+        } else if (userText.length < 15) {
+          reply = pickFromPool('unknown_short');
         } else {
-          reply = "That's a great question! To give you the most accurate answer, could you share a bit more context about your project? I'm here to help with anything — services, pricing, timelines, technology or how we work.";
+          reply = pickFromPool('unknown_long');
         }
     }
 
+    // Avoid exact repetition of last bot reply
+    if (reply === lastBotReply && intent !== 'greeting') {
+      // Force a different angle
+      if (['price','negotiate','discount','value','comparison'].includes(intent)) {
+        reply = getNegotiationResponse();
+      }
+    }
+
     reply += leadNudge();
+    lastIntent = intent;
+    lastBotReply = reply;
     return reply;
   }
 
@@ -351,7 +551,6 @@
     wrap.className = `chat-msg ${role}`;
     const bub = document.createElement('div');
     bub.className = 'chat-bubble';
-    // Convert **bold** markdown and \n to HTML
     bub.innerHTML = text
       .replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -389,7 +588,6 @@
     appendMsg(val, 'user');
     showTyping();
 
-    // Simulate realistic thinking delay (400–900ms)
     const delay = 400 + Math.random() * 500;
     setTimeout(() => {
       hideTyping();
