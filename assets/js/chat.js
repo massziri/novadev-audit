@@ -316,7 +316,7 @@
     /* Topic context — STRICT detection, only explicit project-type phrases */
     if (!mem.topicContext) {
       if (/\bmobile app\b|android|ios|iphone|flutter|react native/.test(t))                           { mem.topicContext='mobile';   mem.topicConfirmed=true; }
-      else if (/e[\-\s]?commerce|online shop|online store|shopify|woocommerce|sell online|woo/.test(t)){ mem.topicContext='ecom';     mem.topicConfirmed=true; }
+      else if (/e[\-\s]?commerce|online shop|online store|shopify|woocommerce|sell online|woo|\bsell\b|\bselling\b/.test(t)){ mem.topicContext='ecom';     mem.topicConfirmed=true; }
       else if (/\blanding page\b|sales page|single page site|one[\s-]page site/.test(t))              { mem.topicContext='landing';  mem.topicConfirmed=true; }
       else if (/redesign|revamp|refactor|improve.*existing|update.*site/.test(t))                     { mem.topicContext='redesign'; mem.topicConfirmed=true; }
       else if (/\bwebsite\b|web app|web site|build.*site|create.*site|new site|need.*site/.test(t))   { mem.topicContext='website';  mem.topicConfirmed=true; }
@@ -381,8 +381,10 @@
            'smartphone app'))
       return 'mobile';
 
+    // IMPORTANT: 'sell','selling','i sell','i want to sell' alone must trigger ecom
     if (is('e-commerce','ecommerce','online shop','online store','shopify','woocommerce',
-           'sell online','digital store','web shop'))
+           'sell online','digital store','web shop') ||
+        /\bsell\b|\bi sell\b|\bwant to sell\b|\bstart selling\b|\bselling products\b|\bsell my\b/.test(t))
       return 'ecom';
 
     if (is('seo','search engine','google rank','ranking','visibility','organic traffic','keyword'))
@@ -392,7 +394,9 @@
            'improve my site','update my site','rebrand'))
       return 'redesign';
 
-    if (is('design','ui ','ux ','interface','mockup','figma','prototype','wireframe','branding'))
+    // FIX: 'ui' and 'ux' alone cause false positives — use word boundaries
+    if (is('design','interface','mockup','figma','prototype','wireframe','branding') ||
+        /\bui\b|\bux\b|\bui\/ux\b/.test(t))
       return 'design';
 
     if (is('landing page','single page','one page','lead page','sales page','campaign page'))
