@@ -880,3 +880,23 @@ textarea { min-height: 120px; resize: vertical; }
     bottom: 20px;
   }
 }
+
+/* ── Language Switcher ─────────────────────────────────────── */
+.nd-lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.22);
+  transition: background .2s, color .2s;
+  letter-spacing: .03em;
+}
+.nd-lang-switch:hover {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+}
