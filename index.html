@@ -38,36 +38,205 @@
   <!-- Umami Analytics (GDPR compliant, cookie-free) -->
   <!-- <script async src="https://YOUR_UMAMI_DOMAIN.vercel.app/script.js" data-website-id="YOUR_UMAMI_WEBSITE_ID"></script> -->
 
-  <!-- Schema.org Structured Data — Local Business + WebSite -->
+  <!-- Google Search Console Verification -->
+  <meta name="google-site-verification" content="GOOGLE_VERIFICATION_CODE_EN" />
+  <!-- Bing / Microsoft Webmaster Verification -->
+  <meta name="msvalidate.01" content="BING_VERIFICATION_CODE_EN" />
+  <!-- Yandex Webmaster Verification -->
+  <meta name="yandex-verification" content="YANDEX_VERIFICATION_CODE_EN" />
+
+  <!-- Schema.org Structured Data — Full SEO: Agency + Services + FAQ + Offers + Breadcrumb -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "ProfessionalService",
+        "@type": ["ProfessionalService", "Organization"],
         "@id": "https://novadev-audit.vercel.app/#organization",
         "name": "Nova Dev",
-        "description": "Premium web design and development agency for ambitious businesses.",
+        "alternateName": "Nova Dev Agency",
+        "description": "Premium web design and development agency for ambitious businesses worldwide. We build high-performance websites, e-commerce stores and mobile apps from $150.",
         "url": "https://novadev-audit.vercel.app/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://novadev-audit.vercel.app/assets/img/og-image.png"
+        },
+        "image": "https://novadev-audit.vercel.app/assets/img/og-image.png",
         "sameAs": [
           "https://novadev-fr-audit.vercel.app/",
-          "https://github.com/massziri"
+          "https://github.com/massziri",
+          "https://www.linkedin.com/company/nova-dev-agency",
+          "https://twitter.com/novadevagency",
+          "https://www.facebook.com/novadevagency",
+          "https://www.instagram.com/novadevagency"
         ],
-        "serviceType": ["Web Design", "Web Development", "Mobile App Development", "E-commerce"],
-        "areaServed": ["France", "Europe", "United Kingdom", "United States"],
-        "priceRange": "€€€",
+        "serviceType": ["Web Design", "Web Development", "Mobile App Development", "E-commerce Development", "Landing Page Design", "Website Redesign", "SEO", "UI/UX Design"],
+        "areaServed": [
+          { "@type": "Country", "name": "France" },
+          { "@type": "Country", "name": "United Kingdom" },
+          { "@type": "Country", "name": "United States" },
+          { "@type": "Country", "name": "Belgium" },
+          { "@type": "Country", "name": "Switzerland" },
+          { "@type": "Continent", "name": "Europe" }
+        ],
+        "priceRange": "$$ - $$$",
+        "currenciesAccepted": "USD, EUR, GBP",
+        "paymentAccepted": "Cash, Credit Card, Bank Transfer",
         "contactPoint": {
           "@type": "ContactPoint",
-          "contactType": "sales",
+          "contactType": "customer support",
           "availableLanguage": ["English", "French"]
+        },
+        "founder": {
+          "@type": "Person",
+          "name": "Nova Dev Founder"
         }
       },
       {
         "@type": "WebSite",
         "@id": "https://novadev-audit.vercel.app/#website",
         "url": "https://novadev-audit.vercel.app/",
-        "name": "Nova Dev — Premium Web Agency",
-        "inLanguage": "en"
+        "name": "Nova Dev — Premium Web Design & Development Agency",
+        "description": "Premium websites & apps from $150. Web design, e-commerce, mobile apps for ambitious businesses.",
+        "inLanguage": "en",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://novadev-audit.vercel.app/?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://novadev-audit.vercel.app/#webpage",
+        "url": "https://novadev-audit.vercel.app/",
+        "name": "Premium Web Design & Development Agency | Nova Dev",
+        "isPartOf": { "@id": "https://novadev-audit.vercel.app/#website" },
+        "about": { "@id": "https://novadev-audit.vercel.app/#organization" },
+        "inLanguage": "en",
+        "datePublished": "2025-01-01",
+        "dateModified": "2026-04-04"
+      },
+      {
+        "@type": "Service",
+        "@id": "https://novadev-audit.vercel.app/#landing-page-service",
+        "serviceType": "Landing Page Design",
+        "name": "Landing Page Design & Development",
+        "description": "High-converting landing pages designed and developed from $150. Optimised for leads and sales.",
+        "provider": { "@id": "https://novadev-audit.vercel.app/#organization" },
+        "offers": {
+          "@type": "Offer",
+          "price": "150",
+          "priceCurrency": "USD",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "150",
+            "priceCurrency": "USD",
+            "unitText": "starting from"
+          }
+        },
+        "areaServed": "Worldwide"
+      },
+      {
+        "@type": "Service",
+        "@id": "https://novadev-audit.vercel.app/#website-service",
+        "serviceType": "Web Development",
+        "name": "Business Website Design & Development",
+        "description": "Professional business and corporate websites from $150. 2–5 pages, delivered in 2–4 weeks.",
+        "provider": { "@id": "https://novadev-audit.vercel.app/#organization" },
+        "offers": {
+          "@type": "Offer",
+          "price": "150",
+          "priceCurrency": "USD",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "150",
+            "priceCurrency": "USD",
+            "unitText": "starting from"
+          }
+        }
+      },
+      {
+        "@type": "Service",
+        "@id": "https://novadev-audit.vercel.app/#ecommerce-service",
+        "serviceType": "E-commerce Development",
+        "name": "E-commerce Website Development",
+        "description": "Full e-commerce stores from $200. Built with modern frameworks, payment integrations and SEO.",
+        "provider": { "@id": "https://novadev-audit.vercel.app/#organization" },
+        "offers": {
+          "@type": "Offer",
+          "price": "200",
+          "priceCurrency": "USD"
+        }
+      },
+      {
+        "@type": "Service",
+        "@id": "https://novadev-audit.vercel.app/#redesign-service",
+        "serviceType": "Website Redesign",
+        "name": "Website Redesign",
+        "description": "Full website redesign from $150. Modernise your brand, improve UX and boost conversions.",
+        "provider": { "@id": "https://novadev-audit.vercel.app/#organization" },
+        "offers": {
+          "@type": "Offer",
+          "price": "150",
+          "priceCurrency": "USD"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://novadev-audit.vercel.app/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How much does a website cost at Nova Dev?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Our prices start from $150 for landing pages and business websites. E-commerce starts from $200 and mobile apps from $200. We offer transparent, fixed pricing with no hidden fees."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How long does it take to build a website?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Landing pages take 3–7 days. Business websites take 2–4 weeks. E-commerce projects take 15–60 days. Mobile apps take 8–16 weeks depending on complexity."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do you work with international clients?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Nova Dev works with clients across France, UK, USA, Belgium, Switzerland and globally. We communicate in English and French."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What technologies do you use?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "We use modern technologies including React, Next.js, TypeScript, Node.js, Shopify, WordPress and mobile frameworks like React Native and Flutter."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do you offer website redesign services?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Our website redesign service starts from $150. We modernise your existing site with a new design, improved UX and better performance."
+            }
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://novadev-audit.vercel.app/"
+          }
+        ]
       }
     ]
   }
