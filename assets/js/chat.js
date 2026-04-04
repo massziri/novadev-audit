@@ -6,7 +6,8 @@
      • Intelligent negotiation with multi-stage memory
      • Never repeats the same sentence
      • Context-aware responses based on conversation flow
-     • Correct pricing: website from $150, mobile from $200
+     • Pricing: website from $150, mobile from $200
+     • E-commerce chatbot agent: $200 one-time, 5 products base, 15–60 days delivery
      • Lead capture → admin@novatvhub.com via FormSubmit
   ============================================================ */
 
@@ -45,7 +46,7 @@
   const PRICING = {
     website:  { from:150, label:'website',             currency:'$' },
     landing:  { from:150, label:'landing page',        currency:'$' },
-    ecom:     { from:150, label:'e-commerce store',    currency:'$' },
+    ecom:     { from:200, label:'e-commerce chatbot agent', currency:'$' },
     redesign: { from:150, label:'website redesign',    currency:'$' },
     design:   { from:150, label:'design project',      currency:'$' },
     seo:      { from:150, label:'SEO / performance',   currency:'$' },
@@ -78,7 +79,7 @@
 
     contact:  "The easiest way to get started is to drop your email here — someone from our team will reach out personally and quickly. Or use the contact form below if you prefer.",
 
-    services_list: "Here's what we offer at Nova Dev:\n\n📱 **Mobile App Development** — from $200\n🌐 **Website / Web App** — from $150\n🛍️ **E-commerce Store** — from $150\n🎨 **UI/UX Design** — from $150\n🔄 **Website Redesign** — from $150\n⚡ **SEO & Performance** — from $150\n\nAll prices depend on scope. Which one interests you most?",
+    services_list: "Here's what we offer at Nova Dev:\n\n📱 **Mobile App Development** — from $200\n🌐 **Website / Web App** — from $150\n🛍️ **E-commerce AI Chatbot Agent** — from $200 (one-time payment)\n🎨 **UI/UX Design** — from $150\n🔄 **Website Redesign** — from $150\n⚡ **SEO & Performance** — from $150\n\nAll prices depend on scope. Which one interests you most?",
   };
 
   /* ── PICK FRESH (no repetition) ──────────────────────────── */
@@ -148,6 +149,7 @@
   const NEG_ANGLES = [
     // Angle 0 — Price clarification (always first)
     (ctx) => {
+      if (ctx === 'ecom') return `Just to be clear — our e-commerce AI chatbot agent starts at **$200 — one-time payment**. No monthly fees, no subscription. You pay once and the bot is yours forever.\n\nThe base package includes **5 trained products** and is delivered in **15–20 days**. Need more products? We can add extra packs.\n\nWhat's your store about?`;
       const p = PRICING[ctx] || PRICING.website;
       return `Just to be clear — our ${p.label} projects start from just **$${p.from}**. That's already one of the most competitive rates you'll find for genuine premium quality. Most agencies charge 5–20x more for the same level of work.\n\nWhat's the budget range you had in mind? I'll do my best to find a scope that fits.`;
     },
@@ -160,11 +162,20 @@
     // Angle 4 — Flexibility offer
     () => `I genuinely want to make this work for you. 🤝 We have a few options:\n\n✅ **Phased delivery** — start lean, scale later\n✅ **Focused scope** — tight, impactful project at entry price\n✅ **Payment flexibility** — we can discuss spreading the cost\n\nIf you share your email, I'll have the team put together a custom plan within your budget — no pressure.`,
     // Angle 5 — Value of professional quality
-    () => `I understand budget sensitivity — but I'd also gently point out: **the cost of a poorly built website is often higher** than the cost of doing it right. Poorly built sites lose visitors, harm credibility and often need expensive fixes later.\n\nWe deliver quality that holds up — and at $150 to start, you're getting genuine value. Would it help to see what's included at that price?`,
+    (ctx) => {
+      if (ctx === 'ecom') return `Think about what a chatbot saves you: customer service time, missed enquiries at night, abandoned carts from unanswered questions. At **$200 one-time** — no monthly fees — it pays for itself quickly and keeps working 24/7.\n\nWould it help to see exactly what's included in the base package?`;
+      return `I understand budget sensitivity — but I'd also gently point out: **the cost of a poorly built website is often higher** than the cost of doing it right. Poorly built sites lose visitors, harm credibility and often need expensive fixes later.\n\nWe deliver quality that holds up — and at $150 to start, you're getting genuine value. Would it help to see what's included at that price?`;
+    },
     // Angle 6 — Client success angle
-    () => `Our clients — businesses just like yours — typically see a **clear return within weeks** of launch: better enquiry quality, stronger brand perception, more time saved thanks to a site that actually answers questions.\n\nI'd love to show you what we could build for your specific budget. Want to share what you're working with?`,
+    (ctx) => {
+      if (ctx === 'ecom') return `Our e-commerce chatbot clients typically report fewer repetitive customer service messages, better 24/7 coverage, and more completed purchases — because shoppers get instant answers at the exact moment they need them.\n\nI'd love to show you what we could build for your store. Want to share your email so our team can send over the details?`;
+      return `Our clients — businesses just like yours — typically see a **clear return within weeks** of launch: better enquiry quality, stronger brand perception, more time saved thanks to a site that actually answers questions.\n\nI'd love to show you what we could build for your specific budget. Want to share what you're working with?`;
+    },
     // Angle 7 — Final soft close
-    () => `I respect your position, and I want to be honest: at **$150 to start**, we're already priced to be accessible for growing businesses. I can't go lower in good conscience and still deliver the quality you deserve.\n\nWhat I *can* do is have our team put together a no-obligation proposal tailored exactly to your goals and budget. Share your email and we'll have it to you within 24 hours. 🙌`,
+    (ctx) => {
+      if (ctx === 'ecom') return `I respect your position, and I want to be straightforward: **$200 one-time** is genuinely the most competitive rate you'll find for a properly trained, custom AI chatbot agent — no template shortcuts, no monthly fees, no hidden costs.\n\nOur team can put together a no-obligation proposal showing exactly what your store would get. Share your email and we'll have it with you within 24 hours. 🙌`;
+      return `I respect your position, and I want to be honest: at **$150 to start**, we're already priced to be accessible for growing businesses. I can't go lower in good conscience and still deliver the quality you deserve.\n\nWhat I *can* do is have our team put together a no-obligation proposal tailored exactly to your goals and budget. Share your email and we'll have it to you within 24 hours. 🙌`;
+    },
   ];
 
   function getNegotiationResponse() {
@@ -216,7 +227,8 @@
             'application','smartphone','tablet app','cross-platform'))
       return 'mobile';
     if (is('e-commerce','ecommerce','online shop','shopify','woocommerce','store','sell online',
-            'product','cart','checkout','online store'))
+            'product','cart','checkout','online store','chatbot','chat bot','ai agent',
+            'bot for my store','bot for my shop','virtual assistant for shop'))
       return 'ecom';
     if (is('seo','search engine','google rank','rank','visibility','organic','keyword',
             'search traffic','google search'))
@@ -310,7 +322,7 @@
       else if (low.includes('website') || low.includes('web')) topicContext = 'website';
     }
     if (!lead.service && topicContext) {
-      const labels = { mobile:'Mobile App', ecom:'E-commerce', landing:'Landing Page', redesign:'Website Redesign', design:'UI/UX Design', website:'Website Development', seo:'SEO & Performance' };
+      const labels = { mobile:'Mobile App', ecom:'E-commerce Chatbot Agent', landing:'Landing Page', redesign:'Website Redesign', design:'UI/UX Design', website:'Website Development', seo:'SEO & Performance' };
       lead.service = labels[topicContext] || '';
     }
   }
@@ -396,8 +408,8 @@
 
       case 'ecom':
         topicContext = 'ecom';
-        if (!lead.service) lead.service = 'E-commerce';
-        reply = `We create conversion-focused **online stores** that present your products beautifully, build trust and reduce buying friction.\n\n💰 **Starting from $150** — we work with Shopify, WooCommerce and custom solutions.\n\nWhat products are you selling?`;
+        if (!lead.service) lead.service = 'E-commerce Chatbot Agent';
+        reply = `We build a custom **AI chatbot agent** for your e-commerce store — trained on your products, your policies and your brand tone, so it can handle customer questions 24/7 without you lifting a finger.\n\n💰 **From $200 — one-time payment** (no monthly fees, no subscription)\n📦 **Base package: 5 products** trained\n⏱️ **Delivery: 15 to 60 days** depending on complexity\n\nThe bot handles product questions, stock, pricing, order status, returns and more. Want to know what's included?`;
         break;
 
       case 'landing':
@@ -425,8 +437,8 @@
       case 'timeline':
         if (topicContext === 'mobile') reply = "Mobile apps typically take **8–16 weeks** from brief to launch, depending on features and complexity.";
         else if (topicContext === 'landing') reply = "Landing pages are usually ready in **1–2 weeks** — fast, focused and effective.";
-        else if (topicContext === 'ecom') reply = "E-commerce stores typically take **4–8 weeks** depending on platform and product volume.";
-        else reply = "Timelines vary by project:\n\n📄 **Landing page** — 1–2 weeks\n🌐 **Full website** — 3–6 weeks\n🛍️ **E-commerce** — 4–8 weeks\n📱 **Mobile app** — 8–16 weeks\n\nWe'll give you a precise timeline during your consultation.";
+        else if (topicContext === 'ecom') reply = "Our e-commerce chatbot agent is delivered in **15 to 60 days** — the base package (5 products) is usually ready in 15–20 days. Larger catalogues or custom integrations take up to 60 days. We'll give you a precise estimate after your brief.";
+        else reply = "Timelines vary by project:\n\n📄 **Landing page** — 1–2 weeks\n🌐 **Full website** — 3–6 weeks\n🛍️ **E-commerce chatbot agent** — 15–60 days\n📱 **Mobile app** — 8–16 weeks\n\nWe'll give you a precise timeline during your consultation.";
         break;
 
       case 'price':
@@ -446,11 +458,19 @@
         break;
 
       case 'value':
-        reply = pickFresh([
-          "At $150, you're not just getting a website — you're getting a **strategic digital asset** designed to attract customers and grow your business. That's an investment that typically returns many times over.",
-          "Think of it this way: a well-built website pays for itself quickly. At $150, you're investing less than many businesses spend in a single day — but getting a tool that works 24/7 for years.",
-          "One new client from your website pays for the whole project — and then it keeps working. That's the power of a well-built digital presence. At $150 to start, the ROI potential is enormous.",
-        ]);
+        if (topicContext === 'ecom') {
+          reply = pickFresh([
+            "At $200 one-time, your chatbot works 24/7 — answering product questions, checking stock, guiding customers through checkout — without you paying a cent more each month. That's a **permanent asset** for your store.",
+            "Think about it: one abandoned cart recovered by the bot, one customer question answered at midnight instead of being ignored — that's already value. At **$200 one-time**, the return comes fast.",
+            "A trained chatbot reduces support time, captures leads at night and gives shoppers instant answers. **$200 one-time, no monthly fees** — it's one of the smartest investments for any e-commerce store.",
+          ]);
+        } else {
+          reply = pickFresh([
+            "At $150, you're not just getting a website — you're getting a **strategic digital asset** designed to attract customers and grow your business. That's an investment that typically returns many times over.",
+            "Think of it this way: a well-built website pays for itself quickly. At $150, you're investing less than many businesses spend in a single day — but getting a tool that works 24/7 for years.",
+            "One new client from your website pays for the whole project — and then it keeps working. That's the power of a well-built digital presence. At $150 to start, the ROI potential is enormous.",
+          ]);
+        }
         break;
 
       case 'comparison':
@@ -575,7 +595,7 @@
       showTyping();
       setTimeout(() => {
         hideTyping();
-        appendMsg("Hi there! 👋 I'm the Nova Dev assistant.\n\nI can answer any question about our services — **websites from $150**, **mobile apps from $200**, timelines, tech, process and more.\n\nWhat are you looking to build?", 'bot');
+        appendMsg("Hi there! 👋 I'm the Nova Dev assistant.\n\nI can answer any question about our services — **websites from $150**, **mobile apps from $200**, **e-commerce AI chatbot agents from $200 (one-time)**, timelines, tech, process and more.\n\nWhat are you looking to build?", 'bot');
       }, 850);
     }, 300);
   }
