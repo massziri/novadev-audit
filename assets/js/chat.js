@@ -192,9 +192,9 @@
   /* ── Greeting ── */
   function greet() {
     const greetings = [
-      "👋 Hi! I'm the Nova Dev assistant. We build premium websites & apps from €150. What kind of project are you working on?",
-      "👋 Hello! I help businesses get professional websites. Landing pages from €150, full sites from €990. What brings you here today?",
-      "👋 Hi there! Nova Dev here — premium web & mobile development for French and European businesses. How can I help you?"
+      "👋 Hi! I'm the Nova Dev assistant. We build premium websites & apps from $200. What kind of project are you working on?",
+      "👋 Hello! I help businesses get professional websites. Landing pages from $200, full sites from $990. What brings you here today?",
+      "👋 Hi there! Nova Dev here — premium web & mobile development for businesses worldwide. E-commerce from $200, apps from $2,000. How can I help?"
     ];
     const msg = greetings[Math.floor(Math.random() * greetings.length)];
     addMessage(msg, 'bot');
