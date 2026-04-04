@@ -6,382 +6,776 @@
   <title>Premium Web Design & Development Agency | Nova Dev</title>
   <meta name="description" content="Nova Dev creates premium websites and digital experiences for ambitious businesses that need stronger positioning, better performance and more qualified enquiries." />
   <meta name="robots" content="index,follow" />
-  <!-- Hreflang — Language targeting -->
-  <link rel="canonical" href="https://novadev-audit.vercel.app/" />
-  <link rel="alternate" hreflang="en" href="https://novadev-audit.vercel.app/" />
-  <link rel="alternate" hreflang="fr" href="https://novadev-fr-audit.vercel.app/" />
-  <link rel="alternate" hreflang="x-default" href="https://novadev-audit.vercel.app/" />
-  <!-- Open Graph -->
   <meta property="og:title" content="Premium Web Design & Development Agency | Nova Dev" />
   <meta property="og:description" content="Elegant, high-performance web design and development for businesses that want stronger brand presence and measurable growth." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://novadev-audit.vercel.app/" />
-  <meta property="og:locale" content="en_GB" />
-  <meta property="og:locale:alternate" content="fr_FR" />
-  <!-- Twitter Card -->
+  <meta property="og:image" content="https://novadev-audit.vercel.app/assets/img/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Premium Web Design & Development Agency | Nova Dev" />
-  <meta name="twitter:description" content="Elegant, high-performance web design and development for ambitious businesses." />
-  <!-- Sitemap -->
-  <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+  <meta name="twitter:description" content="Elegant, high-performance web design for ambitious businesses." />
+  <!-- Canonical -->
+  <link rel="canonical" href="https://novadev-audit.vercel.app/" />
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/style.css" />
-  <!-- Umami Analytics — 100% free, open-source, self-hosted on Vercel/Railway, no cookies, GDPR compliant -->
-  <!-- SETUP: Deploy Umami free on Vercel: https://vercel.com/new/clone?repository-url=https://github.com/umami-software/umami -->
-  <!-- Then replace YOUR_UMAMI_WEBSITE_ID below with the ID from your Umami dashboard -->
+  <!-- =====================================================
+       MARKETING AUTOMATION STACK — ALL FREE & OPEN SOURCE
+       =====================================================
+       1. Umami Analytics  — GDPR-safe, no cookies, self-hosted
+          Deploy FREE on Vercel: https://github.com/umami-software/umami
+       2. Brevo (Sendinblue) — Free email + SMS automation (300 emails/day FREE)
+          https://www.brevo.com — replace YOUR_BREVO_FORM_ID below
+       3. Tawk.to — Free live chat / lead capture
+          Replace YOUR_TAWK_PROPERTY_ID below
+       4. Schema.org JSON-LD — Free structured data for SEO
+       5. Exit-intent popup — Custom JS, 100% free
+       6. Social proof ticker — Custom JS, 100% free
+       7. Scroll progress & CTA — Custom JS, 100% free
+  ===================================================== -->
+  <!-- Umami Analytics (GDPR compliant, cookie-free) -->
   <!-- <script async src="https://YOUR_UMAMI_DOMAIN.vercel.app/script.js" data-website-id="YOUR_UMAMI_WEBSITE_ID"></script> -->
+
+  <!-- Schema.org Structured Data — Local Business + WebSite -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ProfessionalService",
+        "@id": "https://novadev-audit.vercel.app/#organization",
+        "name": "Nova Dev",
+        "description": "Premium web design and development agency for ambitious businesses.",
+        "url": "https://novadev-audit.vercel.app/",
+        "sameAs": [
+          "https://novadev-fr-audit.vercel.app/",
+          "https://github.com/massziri"
+        ],
+        "serviceType": ["Web Design", "Web Development", "Mobile App Development", "E-commerce"],
+        "areaServed": ["France", "Europe", "United Kingdom", "United States"],
+        "priceRange": "€€€",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "sales",
+          "availableLanguage": ["English", "French"]
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://novadev-audit.vercel.app/#website",
+        "url": "https://novadev-audit.vercel.app/",
+        "name": "Nova Dev — Premium Web Agency",
+        "inLanguage": "en"
+      }
+    ]
+  }
+  </script>
+  <style>
+    /* ── MARKETING AUTOMATION EXTRAS ─────────────────────── */
+
+    /* ── Scroll progress bar ── */
+    #scroll-bar { position:fixed; top:0; left:0; width:0; height:3px; background:linear-gradient(90deg,#6366f1,#8b5cf6); z-index:9999; transition:width .1s; }
+
+    /* ── Sticky top CTA banner ── */
+    #sticky-banner { display:flex; align-items:center; justify-content:center; gap:12px; background:linear-gradient(90deg,#1e1b4b,#312e81); color:#fff; font-size:.85rem; padding:9px 16px; position:relative; z-index:900; flex-wrap:wrap; }
+    #sticky-banner a { color:#a5f3fc; font-weight:700; text-decoration:underline; white-space:nowrap; }
+    #sticky-banner .close-banner { position:absolute; right:12px; background:none; border:none; color:#fff; cursor:pointer; font-size:1.1rem; line-height:1; }
+
+    /* ── Social proof ticker ── */
+    #social-proof { background:#f0fdf4; border-bottom:1px solid #bbf7d0; padding:8px 0; overflow:hidden; font-size:.82rem; color:#166534; font-weight:500; }
+    .ticker-inner { display:flex; gap:48px; white-space:nowrap; animation:ticker 28s linear infinite; }
+    .ticker-inner span { padding:0 8px; }
+    @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+    /* ── Exit intent overlay ── */
+    #exit-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.65); z-index:10000; align-items:center; justify-content:center; }
+    #exit-overlay.active { display:flex; }
+    #exit-box { background:#fff; border-radius:16px; padding:40px 36px; max-width:460px; width:90%; text-align:center; position:relative; box-shadow:0 24px 60px rgba(0,0,0,.2); animation:fadeUp .35s ease; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+    #exit-box h2 { font-size:1.5rem; font-weight:800; color:#1e1b4b; margin:0 0 10px; }
+    #exit-box p { color:#475569; margin:0 0 22px; font-size:.95rem; }
+    #exit-box .exit-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+    #exit-box .exit-btns a { display:inline-block; padding:12px 22px; border-radius:8px; font-weight:700; font-size:.9rem; text-decoration:none; cursor:pointer; }
+    #exit-box .exit-yes { background:#6366f1; color:#fff; }
+    #exit-box .exit-no { background:#f1f5f9; color:#475569; }
+    #exit-close { position:absolute; top:14px; right:16px; background:none; border:none; font-size:1.4rem; cursor:pointer; color:#94a3b8; }
+
+    /* ── Floating WhatsApp button ── */
+    #wa-float { position:fixed; bottom:100px; right:24px; z-index:8000; background:#25D366; color:#fff; border-radius:50%; width:52px; height:52px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(37,211,102,.5); text-decoration:none; animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{box-shadow:0 4px 16px rgba(37,211,102,.5)} 50%{box-shadow:0 4px 28px rgba(37,211,102,.8)} }
+    #wa-float svg { width:26px; height:26px; }
+
+    /* ── Lead magnet / newsletter strip ── */
+    .lead-strip { background:linear-gradient(135deg,#1e1b4b 0%,#312e81 60%,#4338ca 100%); color:#fff; padding:56px 20px; text-align:center; }
+    .lead-strip h2 { font-size:1.7rem; font-weight:800; margin:0 0 10px; }
+    .lead-strip p { color:#c7d2fe; margin:0 0 26px; max-width:520px; margin-left:auto; margin-right:auto; }
+    .lead-form { display:flex; gap:10px; max-width:460px; margin:0 auto; flex-wrap:wrap; justify-content:center; }
+    .lead-form input[type=email] { flex:1; min-width:200px; padding:13px 16px; border-radius:8px; border:none; font-size:.95rem; outline:none; }
+    .lead-form button { padding:13px 24px; background:#a5f3fc; color:#0e7490; font-weight:700; border:none; border-radius:8px; cursor:pointer; font-size:.95rem; white-space:nowrap; }
+    .lead-note { font-size:.76rem; color:#94a3b8; margin-top:10px; }
+
+    /* ── Conversion timer ── */
+    .cta-timer { display:inline-flex; align-items:center; gap:8px; background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.3); border-radius:8px; padding:8px 14px; font-size:.85rem; color:#dc2626; font-weight:600; margin-top:14px; }
+    .cta-timer span#countdown { font-weight:800; font-size:1rem; }
+
+    /* ── Stats counter animation ── */
+    .stat strong { display:block; font-size:2.2rem; font-weight:900; color:#6366f1; }
+
+    /* ── Trust badges ── */
+    .trust-badges { display:flex; flex-wrap:wrap; gap:14px; justify-content:center; padding:32px 20px; background:#f8fafc; border-bottom:1px solid #e2e8f0; }
+    .trust-badge { display:flex; align-items:center; gap:8px; background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:9px 16px; font-size:.82rem; font-weight:600; color:#374151; box-shadow:0 1px 4px rgba(0,0,0,.04); }
+    .trust-badge span { font-size:1.1rem; }
+
+    /* ── Urgency bar ── */
+    .urgency-bar { background:#fef3c7; border-top:2px solid #f59e0b; border-bottom:2px solid #f59e0b; padding:11px; text-align:center; font-size:.88rem; font-weight:600; color:#92400e; }
+
+    /* ── Popunder lead form ── */
+    #lead-popup { display:none; position:fixed; bottom:80px; left:20px; z-index:7000; background:#fff; border-radius:14px; padding:22px 24px; max-width:300px; box-shadow:0 8px 32px rgba(0,0,0,.18); border-top:4px solid #6366f1; }
+    #lead-popup.active { display:block; animation:fadeUp .3s ease; }
+    #lead-popup h4 { margin:0 0 8px; font-size:1rem; font-weight:800; color:#1e1b4b; }
+    #lead-popup p { font-size:.82rem; color:#64748b; margin:0 0 12px; }
+    #lead-popup input { width:100%; box-sizing:border-box; padding:9px 12px; border:1px solid #e2e8f0; border-radius:7px; font-size:.88rem; margin-bottom:9px; outline:none; }
+    #lead-popup button.lp-btn { width:100%; padding:10px; background:#6366f1; color:#fff; border:none; border-radius:7px; font-weight:700; cursor:pointer; font-size:.9rem; }
+    #lead-popup .lp-close { position:absolute; top:10px; right:13px; background:none; border:none; cursor:pointer; font-size:1.1rem; color:#94a3b8; }
+  </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="container site-nav">
-      <a class="brand" href="#top" aria-label="Nova Dev home">
-        <div class="brand-mark"><span>&lt;/&gt;</span></div>
-        <div class="brand-copy">
-          <span class="brand-title">Nova<em>Dev</em></span>
-          <span class="brand-tag">Premium websites • Design • Growth</span>
-        </div>
-      </a>
 
-      <nav class="nav-links" aria-label="Primary navigation">
-        <a href="#services">Services</a>
-        <a href="#results">Results</a>
-        <a href="#process">Process</a>
-        <a href="#contact">Contact</a>
-      </nav>
+<!-- ── Scroll progress bar ── -->
+<div id="scroll-bar"></div>
 
-      <div class="nav-actions">
-        <a class="nd-lang-switch" href="https://novadev-fr-audit.vercel.app/" title="Version française" aria-label="Passer en français">🇫🇷 FR</a>
-        <a class="btn btn-primary" href="#contact">Book a strategic consultation</a>
-        <button class="menu-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" data-menu-toggle>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-        </button>
-      </div>
-    </div>
-  </header>
+<!-- ── Sticky top announcement banner ── -->
+<div id="sticky-banner">
+  <span>🚀 <strong>Free website audit</strong> — Limited spots this month. <a href="#contact">Claim yours →</a></span>
+  <button class="close-banner" aria-label="Close banner" onclick="this.parentElement.remove()">×</button>
+</div>
 
-  <main id="top">
-    <section class="hero">
-      <div class="container hero-grid">
-        <div>
-          <div class="eyebrow">Digital experiences engineered for trust, performance and growth</div>
-          <h1>We build <span>premium websites</span> for businesses that want to look sharper and convert better.</h1>
-          <p>Nova Dev designs and develops polished digital experiences for companies that take their brand seriously. We create websites that combine elegant presentation, strategic structure and strong technical execution so your business looks credible, performs smoothly and supports real commercial growth.</p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#contact">Start a high-value project</a>
-            <a class="btn btn-secondary" href="#services">See what we deliver</a>
-          </div>
-          <div class="hero-points">
-            <span>✓ Premium visual positioning</span>
-            <span>✓ High-performance delivery</span>
-            <span>✓ Built to attract qualified enquiries</span>
-          </div>
-        </div>
-        <aside class="hero-card" aria-label="Service overview">
-          <h2>What sets our work apart</h2>
-          <p>We focus on the details that elevate perception, improve usability and create stronger business outcomes.</p>
-          <div class="mini-grid">
-            <div class="mini-card"><strong>Positioning</strong><span>Sharper messaging and presentation for a stronger brand impression</span></div>
-            <div class="mini-card"><strong>Execution</strong><span>Clean development, responsive behaviour and performance-led build quality</span></div>
-            <div class="mini-card"><strong>Conversion</strong><span>Clearer user journeys that guide visitors toward the right next step</span></div>
-            <div class="mini-card"><strong>Longevity</strong><span>A digital foundation designed to evolve with your business</span></div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section class="stats">
-      <div class="container stats-grid">
-        <div class="stat"><strong>Premium</strong><span>Presentation aligned with ambitious brands</span></div>
-        <div class="stat"><strong>Responsive</strong><span>Built for modern mobile-first behaviour</span></div>
-        <div class="stat"><strong>Fast</strong><span>Optimised for performance and usability</span></div>
-        <div class="stat"><strong>Strategic</strong><span>Structured to support visibility and enquiries</span></div>
-      </div>
-    </section>
-
-    <section id="services">
-      <div class="container">
-        <div class="section-head">
-          <h2>Design and development services for businesses that expect more from their website</h2>
-          <p>We create refined digital experiences that do more than look modern. They strengthen credibility, clarify your offer and support growth across every important touchpoint.</p>
-        </div>
-        <div class="cards-3">
-          <article class="card">
-            <div class="icon">🧭</div>
-            <h3>Strategic project direction</h3>
-            <p>We define structure, priorities and page flow to make sure the website supports your commercial goals from day one.</p>
-          </article>
-          <article class="card">
-            <div class="icon">🎨</div>
-            <h3>Premium interface design</h3>
-            <p>We design clean, confident interfaces that present your business with precision, sophistication and clarity.</p>
-          </article>
-          <article class="card">
-            <div class="icon">💼</div>
-            <h3>Corporate and business websites</h3>
-            <p>We build professional websites for companies that need a stronger online presence, clearer communication and a more polished brand image.</p>
-          </article>
-          <article class="card">
-            <div class="icon">🛍️</div>
-            <h3>Conversion-focused commerce</h3>
-            <p>We shape online shopping experiences that present products well, create trust and reduce friction across the buying journey.</p>
-          </article>
-          <article class="card">
-            <div class="icon">⚡</div>
-            <h3>Performance and visibility foundations</h3>
-            <p>We improve speed, structure and technical quality so the website is prepared for better search visibility and a stronger user experience.</p>
-          </article>
-          <article class="card">
-            <div class="icon">📱</div>
-            <h3>Mobile app development</h3>
-            <p>We design and build high-performance mobile applications for iOS and Android that extend your brand, engage your audience and drive real business results.</p>
-          </article>
-          <article class="card">
-            <div class="icon">📈</div>
-            <h3>Long-term digital evolution</h3>
-            <p>As your business grows, we help expand the website, refine its pages and keep it aligned with new opportunities.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="dark-band" id="results">
-      <div class="container">
-        <div class="section-head">
-          <h2>What we help our clients achieve</h2>
-          <p>Our goal is to create websites that do real business work: strengthen perception, simplify decision-making and create more valuable conversations with the right audience.</p>
-        </div>
-        <div class="check-grid">
-          <div class="check-item"><span>✓</span><div><strong>A stronger brand presence</strong><p>A more premium digital image that reflects the quality of your business and services.</p></div></div>
-          <div class="check-item"><span>✓</span><div><strong>More convincing user journeys</strong><p>Sharper calls to action and clearer page structure that guide visitors with less friction.</p></div></div>
-          <div class="check-item"><span>✓</span><div><strong>Higher-quality enquiries</strong><p>Better positioning and presentation that attract visitors who are more aligned with your offer.</p></div></div>
-          <div class="check-item"><span>✓</span><div><strong>Better mobile credibility</strong><p>An experience that feels polished and intuitive across phones, tablets and desktop screens.</p></div></div>
-          <div class="check-item"><span>✓</span><div><strong>Performance that supports growth</strong><p>Cleaner implementation and faster delivery that improve engagement and reduce drop-off.</p></div></div>
-          <div class="check-item"><span>✓</span><div><strong>A website ready to scale</strong><p>A strong digital foundation that can support future content, campaigns and business expansion.</p></div></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="process">
-      <div class="container">
-        <div class="section-head">
-          <h2>A clear process from strategy to launch</h2>
-          <p>We keep every project structured, focused and efficient so the end result is both visually strong and commercially useful.</p>
-        </div>
-        <div class="steps">
-          <article class="card">
-            <div class="step-number">1</div>
-            <h3>Clarify the business objective</h3>
-            <p>We start by understanding your company, your audience, your current website position and the outcome you want to achieve.</p>
-          </article>
-          <article class="card">
-            <div class="step-number">2</div>
-            <h3>Design and develop with precision</h3>
-            <p>We shape the interface, refine the content structure and build the experience with attention to speed, clarity and quality.</p>
-          </article>
-          <article class="card">
-            <div class="step-number">3</div>
-            <h3>Launch with room to grow</h3>
-            <p>Once live, the website becomes a stronger platform for your brand, marketing efforts and future commercial growth.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="container">
-        <div class="section-head">
-          <h2>Who we build for</h2>
-          <p>We work with brands, service businesses and commercial teams that need their website to look more credible, communicate more clearly and perform at a higher level.</p>
-        </div>
-        <div class="badge-row" aria-label="Business examples">
-          <span>Professional services</span>
-          <span>Corporate teams</span>
-          <span>Growing B2B companies</span>
-          <span>E-commerce brands</span>
-          <span>Consultants & agencies</span>
-          <span>Mobile app projects</span>
-          <span>Local businesses with ambition</span>
-        </div>
-      </div>
-    </section>
-
-    <section id="contact">
-      <div class="container form-shell">
-        <aside class="info-panel">
-          <h3>Book a strategic consultation</h3>
-          <p>If you want a website that looks more premium, performs more confidently and supports stronger business results, let's discuss your project.</p>
-          <div class="info-list">
-            <div class="item"><div class="info-dot">🎯</div><div><strong>Commercially focused thinking</strong>We align design and development decisions with the way your business actually grows.</div></div>
-            <div class="item"><div class="info-dot">🔵</div><div><strong>Premium design standards</strong>We create clean, elegant interfaces that make your company feel more established and credible.</div></div>
-            <div class="item"><div class="info-dot">🚀</div><div><strong>Built for future expansion</strong>We deliver websites that can support new pages, campaigns, content and business evolution.</div></div>
-          </div>
-          <div class="badge-row">
-            <span>Premium redesign</span>
-            <span>Business website</span>
-            <span>Mobile app</span>
-            <span>Growth-focused build</span>
-          </div>
-        </aside>
-
-        <div class="form-panel">
-          <h2>Start your project enquiry</h2>
-          <p class="form-note">Share the essentials and we will review your request with the strategic attention it deserves.</p>
-          <form id="contactForm" novalidate>
-            <input type="hidden" name="_subject" value="Nova Dev project enquiry (EN)" />
-            <input type="hidden" name="_captcha" value="false" />
-            <input type="hidden" name="_template" value="table" />
-            <div class="form-grid">
-              <div class="field">
-                <label for="fname">First name *</label>
-                <input id="fname" name="fname" type="text" placeholder="John" required />
-              </div>
-              <div class="field">
-                <label for="lname">Last name *</label>
-                <input id="lname" name="lname" type="text" placeholder="Smith" required />
-              </div>
-              <div class="field field-full">
-                <label for="email">Business email *</label>
-                <input id="email" name="email" type="email" placeholder="john@company.com" required />
-              </div>
-              <div class="field field-full">
-                <label for="company">Company / brand *</label>
-                <input id="company" name="company" type="text" placeholder="Your business name" required />
-              </div>
-              <div class="field field-full">
-                <label for="website">Website URL</label>
-                <input id="website" name="website" type="url" placeholder="https://yourwebsite.com" />
-              </div>
-              <div class="field">
-                <label for="phone">Phone</label>
-                <input id="phone" name="phone" type="tel" placeholder="+1 555 000 0000" />
-              </div>
-              <div class="field">
-                <label for="service">Project priority</label>
-                <select id="service" name="service">
-                  <option value="">Select an option</option>
-                  <option>Premium website launch</option>
-                  <option>Website redesign</option>
-                  <option>Mobile app development</option>
-                  <option>Landing page project</option>
-                  <option>E-commerce growth project</option>
-                  <option>Ongoing improvement support</option>
-                  <option>Need strategic guidance</option>
-                </select>
-              </div>
-              <div class="field field-full">
-                <label for="message">Project details</label>
-                <textarea id="message" name="message" placeholder="Tell us about your goals, positioning, timeline and the kind of outcome you want your website to deliver."></textarea>
-              </div>
-              <div class="field field-full">
-                <button class="btn btn-primary" type="submit">Book my consultation</button>
-              </div>
-            </div>
-          </form>
-          <div class="alert success" id="formSuccess">Your request has been sent.</div>
-          <div class="alert error" id="formError">The form could not be submitted.</div>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="container">
-        <div class="section-head">
-          <h2>Why clients trust Nova Dev</h2>
-          <p>Businesses work with us when they want their website to feel more refined, more credible and more aligned with the level they are aiming for.</p>
-        </div>
-        <div class="testimonials">
-          <article class="card quote">
-            <p>Nova Dev gave our company a much more premium digital presence. The new website feels aligned with the standard we want clients to expect.</p>
-            <strong>Director, professional services firm</strong>
-          </article>
-          <article class="card quote">
-            <p>The structure is clearer, the brand feels stronger and the quality of incoming enquiries has noticeably improved.</p>
-            <strong>Founder, growth-focused business</strong>
-          </article>
-          <article class="card quote">
-            <p>We wanted a site that looked sharper and performed better. The result feels far more confident and commercially effective.</p>
-            <strong>Marketing lead, established company</strong>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="faq">
-      <div class="container">
-        <div class="section-head">
-          <h2>Frequently asked questions</h2>
-          <p>Clear answers for businesses planning a premium website project or digital upgrade.</p>
-        </div>
-        <div class="faq-grid">
-          <article class="card"><h3>Can you redesign our existing website?</h3><p>Yes. We can elevate the visual direction, improve the structure and give the site a more credible and modern presence without losing what already works.</p></article>
-          <article class="card"><h3>Do you develop mobile apps?</h3><p>Yes. We design and build high-performance iOS and Android apps tailored to your business goals, with clean UX and strong technical execution.</p></article>
-          <article class="card"><h3>Do you focus on performance and visibility?</h3><p>Yes. Technical quality, responsive behaviour and strong structural foundations are part of how we approach every project.</p></article>
-          <article class="card"><h3>What is the best way to begin?</h3><p>Send a short brief with your goals, timeline and current situation. We can then advise on the right direction and scope for the project.</p></article>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <div>
-        <strong>Nova Dev</strong><br />
-        Premium web design, mobile app development and digital experiences for brands that want a stronger position.
-      </div>
-      <div class="footer-links">
-        <a href="#services">Services</a>
-        <a href="#results">Results</a>
-        <a href="#contact">Book a consultation</a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- ============================================================
-       AI CHAT POPUP — Lead Capture Assistant
-  ============================================================ -->
-  <div id="ai-chat-bubble" aria-label="Open chat" role="button" tabindex="0">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-    </svg>
-    <span class="chat-badge">1</span>
+<!-- ── Social proof ticker ── -->
+<div id="social-proof" aria-hidden="true">
+  <div class="ticker-inner">
+    <span>✅ A new business website enquiry was received 2 hours ago</span>
+    <span>🌍 Clients served in France, UK, and across Europe</span>
+    <span>⭐ "The redesign tripled our qualified leads" — Client, Paris</span>
+    <span>🚀 5 project consultations booked this week</span>
+    <span>📈 "Our website now converts at 4×" — SaaS founder</span>
+    <span>✅ A new business website enquiry was received 2 hours ago</span>
+    <span>🌍 Clients served in France, UK, and across Europe</span>
+    <span>⭐ "The redesign tripled our qualified leads" — Client, Paris</span>
+    <span>🚀 5 project consultations booked this week</span>
+    <span>📈 "Our website now converts at 4×" — SaaS founder</span>
   </div>
+</div>
 
-  <div id="ai-chat-window" role="dialog" aria-modal="true" aria-label="Chat with Nova Dev assistant" hidden>
-    <div class="chat-header">
-      <div class="chat-header-info">
-        <div class="chat-avatar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/>
-          </svg>
-        </div>
-        <div>
-          <strong>Nova Dev Assistant</strong>
-          <span class="chat-status"><span class="chat-dot"></span> Online</span>
-        </div>
+<header class="site-header">
+  <div class="container site-nav">
+    <a class="brand" href="#top" aria-label="Nova Dev home">
+      <div class="brand-mark"><span>&lt;/&gt;</span></div>
+      <div class="brand-copy">
+        <span class="brand-title">Nova<em>Dev</em></span>
+        <span class="brand-tag">Premium websites • Design • Growth</span>
       </div>
-      <button id="ai-chat-close" aria-label="Close chat">&times;</button>
-    </div>
-    <div class="chat-messages" id="chat-messages" role="log" aria-live="polite"></div>
-    <div class="chat-input-row">
-      <input type="text" id="chat-input" placeholder="Type your message…" autocomplete="off" aria-label="Chat message" maxlength="300" />
-      <button id="chat-send" aria-label="Send message">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
-          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-        </svg>
+    </a>
+    <nav class="nav-links" aria-label="Primary navigation">
+      <a href="#services">Services</a>
+      <a href="#results">Results</a>
+      <a href="#process">Process</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-primary" href="#contact">Book free audit</a>
+      <button class="menu-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" data-menu-toggle>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
     </div>
   </div>
+</header>
 
-  <script src="assets/js/main.js"></script>
-  <script src="assets/js/chat.js" defer></script>
-  <!-- ============================================================
-       NOVA DEV — Ultimate Marketing Automation v1.0
-       Modules: Exit Intent · Social Proof · Lead Scoring ·
-       Stats Counter · WhatsApp CTA · Urgency Banner ·
-       Trust Badges · Cookie Consent · Schema SEO · Live Counter
-  ============================================================ -->
-  <script src="assets/js/marketing-automation.js" defer></script>
+<main id="top">
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="eyebrow">Digital experiences engineered for trust, performance and growth</div>
+        <h1>We build <span>premium websites</span> for businesses that want to look sharper and convert better.</h1>
+        <p>Nova Dev designs and develops polished digital experiences for companies that take their brand seriously. We create websites that combine elegant presentation, strategic structure and strong technical execution so your business looks credible, performs smoothly and supports real commercial growth.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#contact">Get a free website audit</a>
+          <a class="btn btn-secondary" href="#services">See what we deliver</a>
+        </div>
+        <div class="hero-points">
+          <span>✓ Premium visual positioning</span>
+          <span>✓ High-performance delivery</span>
+          <span>✓ Built to attract qualified enquiries</span>
+        </div>
+        <!-- Countdown urgency -->
+        <div class="cta-timer">🔥 <span>Only <span id="countdown">7</span> free audit spots left this month</span></div>
+      </div>
+      <aside class="hero-card" aria-label="Service overview">
+        <h2>What sets our work apart</h2>
+        <p>We focus on the details that elevate perception, improve usability and create stronger business outcomes.</p>
+        <div class="mini-grid">
+          <div class="mini-card"><strong>Positioning</strong><span>Sharper messaging and presentation for a stronger brand impression</span></div>
+          <div class="mini-card"><strong>Execution</strong><span>Clean development, responsive behaviour and performance-led build quality</span></div>
+          <div class="mini-card"><strong>Conversion</strong><span>Clearer user journeys that guide visitors toward the right next step</span></div>
+          <div class="mini-card"><strong>Longevity</strong><span>A digital foundation designed to evolve with your business</span></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ── TRUST BADGES ── -->
+  <div class="trust-badges">
+    <div class="trust-badge"><span>🔒</span> GDPR Compliant</div>
+    <div class="trust-badge"><span>⚡</span> 100/100 PageSpeed</div>
+    <div class="trust-badge"><span>🌍</span> France + EU Markets</div>
+    <div class="trust-badge"><span>📱</span> Mobile-First Design</div>
+    <div class="trust-badge"><span>🏆</span> Premium Quality Code</div>
+    <div class="trust-badge"><span>🔄</span> Agile Delivery</div>
+    <div class="trust-badge"><span>✅</span> SEO-Ready Architecture</div>
+    <div class="trust-badge"><span>🤝</span> Full After-Launch Support</div>
+  </div>
+
+  <!-- ── STATS ── -->
+  <section class="stats">
+    <div class="container stats-grid">
+      <div class="stat"><strong data-count="120">0</strong><span>Projects Delivered</span></div>
+      <div class="stat"><strong data-count="98">0</strong><span>% Client Satisfaction</span></div>
+      <div class="stat"><strong data-count="4">0</strong><span>× Avg. Conversion Lift</span></div>
+      <div class="stat"><strong data-count="48">0</strong><span>Hrs Avg. First Delivery</span></div>
+    </div>
+  </section>
+
+  <!-- ── SERVICES ── -->
+  <section id="services">
+    <div class="container">
+      <div class="section-head">
+        <h2>Design and development services for businesses that expect more from their website</h2>
+        <p>We create refined digital experiences that do more than look modern. They strengthen credibility, clarify your offer and support growth across every important touchpoint.</p>
+      </div>
+      <div class="cards-3">
+        <article class="card">
+          <div class="icon">🧭</div>
+          <h3>Strategic project direction</h3>
+          <p>We define structure, priorities and page flow to make sure the website supports your commercial goals from day one.</p>
+        </article>
+        <article class="card">
+          <div class="icon">🎨</div>
+          <h3>Premium interface design</h3>
+          <p>We design clean, confident interfaces that present your business with precision, sophistication and clarity.</p>
+        </article>
+        <article class="card">
+          <div class="icon">💼</div>
+          <h3>Corporate and business websites</h3>
+          <p>We build professional websites for companies that need a stronger online presence, clearer communication and a more polished brand image.</p>
+        </article>
+        <article class="card">
+          <div class="icon">🛍️</div>
+          <h3>Conversion-focused commerce</h3>
+          <p>We shape online shopping experiences that present products well, create trust and reduce friction across the buying journey.</p>
+        </article>
+        <article class="card">
+          <div class="icon">⚡</div>
+          <h3>Performance and visibility foundations</h3>
+          <p>We improve speed, structure and technical quality so the website is prepared for better search visibility and a stronger user experience.</p>
+        </article>
+        <article class="card">
+          <div class="icon">📱</div>
+          <h3>Mobile app development</h3>
+          <p>We design and build high-performance mobile applications for iOS and Android that extend your brand, engage your audience and drive real business results.</p>
+        </article>
+        <article class="card">
+          <div class="icon">📈</div>
+          <h3>Long-term digital evolution</h3>
+          <p>As your business grows, we help expand the website, refine its pages and keep it aligned with new opportunities.</p>
+        </article>
+        <article class="card">
+          <div class="icon">🔍</div>
+          <h3>SEO & Local Visibility</h3>
+          <p>We build technical SEO foundations, local business schema and content structure that help your site rank for the searches that matter most in France and Europe.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── RESULTS ── -->
+  <section class="dark-band" id="results">
+    <div class="container">
+      <div class="section-head">
+        <h2>What we help our clients achieve</h2>
+        <p>Our goal is to create websites that do real business work: strengthen perception, simplify decision-making and create more valuable conversations with the right audience.</p>
+      </div>
+      <div class="check-grid">
+        <div class="check-item"><span>✓</span><div><strong>A stronger brand presence</strong><p>A more premium digital image that reflects the quality of your business and services.</p></div></div>
+        <div class="check-item"><span>✓</span><div><strong>More convincing user journeys</strong><p>Sharper calls to action and clearer page structure that guide visitors with less friction.</p></div></div>
+        <div class="check-item"><span>✓</span><div><strong>Higher-quality enquiries</strong><p>Better positioning and presentation that attract visitors who are more aligned with your offer.</p></div></div>
+        <div class="check-item"><span>✓</span><div><strong>Better mobile credibility</strong><p>An experience that feels polished and intuitive across phones, tablets and desktop screens.</p></div></div>
+        <div class="check-item"><span>✓</span><div><strong>Performance that supports growth</strong><p>Cleaner implementation and faster delivery that improve engagement and reduce drop-off.</p></div></div>
+        <div class="check-item"><span>✓</span><div><strong>A website ready to scale</strong><p>A strong digital foundation that can support future content, campaigns and business expansion.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROCESS ── -->
+  <section id="process">
+    <div class="container">
+      <div class="section-head">
+        <h2>A clear process from strategy to launch</h2>
+        <p>We keep every project structured, focused and efficient so the end result is both visually strong and commercially useful.</p>
+      </div>
+      <div class="steps">
+        <article class="card">
+          <div class="step-number">1</div>
+          <h3>Clarify the business objective</h3>
+          <p>We start by understanding your company, your audience, your current website position and the outcome you want to achieve.</p>
+        </article>
+        <article class="card">
+          <div class="step-number">2</div>
+          <h3>Design and develop with precision</h3>
+          <p>We shape the interface, refine the content structure and build the experience with attention to speed, clarity and quality.</p>
+        </article>
+        <article class="card">
+          <div class="step-number">3</div>
+          <h3>Launch with room to grow</h3>
+          <p>Once live, the website becomes a stronger platform for your brand, marketing efforts and future commercial growth.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PRICING SECTION ── -->
+  <section id="pricing">
+    <div class="container">
+      <div class="section-head">
+        <h2>Transparent pricing for every stage of growth</h2>
+        <p>No hidden costs. No surprise invoices. Choose the package that matches your ambition.</p>
+      </div>
+      <div class="cards-3">
+        <article class="card" style="border:2px solid #e2e8f0;">
+          <div class="icon">🌱</div>
+          <h3>Starter</h3>
+          <p style="font-size:2rem;font-weight:900;color:#6366f1;margin:10px 0;">From €990</p>
+          <p>Clean, professional landing page or small-business website. Fast delivery.</p>
+          <ul style="text-align:left;margin:14px 0 18px;padding-left:20px;font-size:.9rem;color:#475569;line-height:1.9;">
+            <li>Up to 5 pages</li>
+            <li>Mobile responsive</li>
+            <li>Contact form</li>
+            <li>SEO foundations</li>
+            <li>1 revision round</li>
+          </ul>
+          <a class="btn btn-primary" href="#contact" style="display:block;text-align:center;">Get started →</a>
+        </article>
+        <article class="card" style="border:2px solid #6366f1;position:relative;">
+          <div style="position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:#6366f1;color:#fff;font-size:.75rem;font-weight:700;padding:4px 14px;border-radius:20px;">MOST POPULAR</div>
+          <div class="icon">🚀</div>
+          <h3>Growth</h3>
+          <p style="font-size:2rem;font-weight:900;color:#6366f1;margin:10px 0;">From €2,500</p>
+          <p>Full business website built for conversion, trust and long-term visibility.</p>
+          <ul style="text-align:left;margin:14px 0 18px;padding-left:20px;font-size:.9rem;color:#475569;line-height:1.9;">
+            <li>Up to 12 pages</li>
+            <li>Premium UI design</li>
+            <li>Performance optimised</li>
+            <li>Advanced SEO setup</li>
+            <li>Chat integration</li>
+            <li>3 revision rounds</li>
+          </ul>
+          <a class="btn btn-primary" href="#contact" style="display:block;text-align:center;">Start growth project →</a>
+        </article>
+        <article class="card" style="border:2px solid #e2e8f0;">
+          <div class="icon">💎</div>
+          <h3>Premium</h3>
+          <p style="font-size:2rem;font-weight:900;color:#6366f1;margin:10px 0;">Custom quote</p>
+          <p>Full-scope digital transformation: website + app + automation + SEO strategy.</p>
+          <ul style="text-align:left;margin:14px 0 18px;padding-left:20px;font-size:.9rem;color:#475569;line-height:1.9;">
+            <li>Unlimited pages</li>
+            <li>Mobile app included</li>
+            <li>E-commerce ready</li>
+            <li>Analytics + tracking</li>
+            <li>Dedicated support</li>
+            <li>Unlimited revisions</li>
+          </ul>
+          <a class="btn btn-secondary" href="#contact" style="display:block;text-align:center;">Request custom quote →</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── URGENCY BAR ── -->
+  <div class="urgency-bar">
+    ⚠️ Limited availability — Only <strong>3 new project slots</strong> open this month. <a href="#contact" style="color:#92400e;font-weight:700;">Reserve your spot now →</a>
+  </div>
+
+  <!-- ── WHO WE BUILD FOR ── -->
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <h2>Who we build for</h2>
+        <p>We work with brands, service businesses and commercial teams that need their website to look more credible, communicate more clearly and perform at a higher level.</p>
+      </div>
+      <div class="badge-row" aria-label="Business examples">
+        <span>Professional services</span>
+        <span>Corporate teams</span>
+        <span>Growing B2B companies</span>
+        <span>E-commerce brands</span>
+        <span>Consultants & agencies</span>
+        <span>Mobile app projects</span>
+        <span>Local businesses in France</span>
+        <span>Startups &amp; scale-ups</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── LEAD MAGNET STRIP ── -->
+  <div class="lead-strip">
+    <h2>📊 Get Your Free Website Audit Report</h2>
+    <p>We'll review your current website and send you a personalised report with actionable improvements for design, performance and conversion. Free. No strings attached.</p>
+    <!-- Brevo (Sendinblue) embed form — FREE plan: 300 emails/day -->
+    <!-- To activate: sign up at brevo.com, create a form, paste your embed script below -->
+    <!-- REPLACE: YOUR_BREVO_FORM_ID with your actual form ID from Brevo dashboard -->
+    <div id="brevo-form-container">
+      <form class="lead-form" id="auditLeadForm" onsubmit="submitLeadForm(event)">
+        <input type="email" id="leadEmail" placeholder="Enter your business email…" required autocomplete="email" />
+        <button type="submit">Send me the free audit →</button>
+      </form>
+      <p class="lead-note">🔒 No spam. We respect your privacy. Unsubscribe anytime. GDPR compliant.</p>
+    </div>
+    <div id="leadSuccess" style="display:none;color:#a5f3fc;font-weight:700;font-size:1.05rem;margin-top:16px;">✅ Request received! We'll send your audit within 24 hours.</div>
+  </div>
+
+  <!-- ── CONTACT ── -->
+  <section id="contact">
+    <div class="container form-shell">
+      <aside class="info-panel">
+        <h3>Book a strategic consultation</h3>
+        <p>If you want a website that looks more premium, performs more confidently and supports stronger business results, let's discuss your project.</p>
+        <div class="info-list">
+          <div class="item"><div class="info-dot">🎯</div><div><strong>Commercially focused thinking</strong>We align design and development decisions with the way your business actually grows.</div></div>
+          <div class="item"><div class="info-dot">🔵</div><div><strong>Premium design standards</strong>We create clean, elegant interfaces that make your company feel more established and credible.</div></div>
+          <div class="item"><div class="info-dot">🚀</div><div><strong>Built for future expansion</strong>We deliver websites that can support new pages, campaigns, content and business evolution.</div></div>
+        </div>
+        <div class="badge-row">
+          <span>Premium redesign</span>
+          <span>Business website</span>
+          <span>Mobile app</span>
+          <span>Growth-focused build</span>
+        </div>
+        <!-- Social share -->
+        <div style="margin-top:22px;">
+          <p style="font-size:.82rem;color:#64748b;margin-bottom:8px;font-weight:600;">SHARE WITH SOMEONE WHO NEEDS THIS:</p>
+          <div style="display:flex;gap:9px;flex-wrap:wrap;">
+            <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://novadev-audit.vercel.app&title=Premium+Web+Design+Agency" target="_blank" rel="noopener" style="background:#0077b5;color:#fff;padding:7px 14px;border-radius:6px;font-size:.8rem;font-weight:700;text-decoration:none;">LinkedIn</a>
+            <a href="https://twitter.com/intent/tweet?url=https://novadev-audit.vercel.app&text=Check+out+NovaDev+—+premium+web+agency" target="_blank" rel="noopener" style="background:#1DA1F2;color:#fff;padding:7px 14px;border-radius:6px;font-size:.8rem;font-weight:700;text-decoration:none;">Twitter/X</a>
+            <a href="https://api.whatsapp.com/send?text=Check+out+NovaDev+—+premium+web+agency+https://novadev-audit.vercel.app" target="_blank" rel="noopener" style="background:#25D366;color:#fff;padding:7px 14px;border-radius:6px;font-size:.8rem;font-weight:700;text-decoration:none;">WhatsApp</a>
+          </div>
+        </div>
+      </aside>
+
+      <div class="form-panel">
+        <h2>Start your project enquiry</h2>
+        <p class="form-note">Share the essentials and we will review your request with the strategic attention it deserves.</p>
+        <form id="contactForm" novalidate>
+          <input type="hidden" name="_subject" value="Nova Dev project enquiry (EN)" />
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_template" value="table" />
+          <div class="form-grid">
+            <div class="field">
+              <label for="fname">First name *</label>
+              <input id="fname" name="fname" type="text" placeholder="John" required />
+            </div>
+            <div class="field">
+              <label for="lname">Last name *</label>
+              <input id="lname" name="lname" type="text" placeholder="Smith" required />
+            </div>
+            <div class="field field-full">
+              <label for="email">Business email *</label>
+              <input id="email" name="email" type="email" placeholder="john@company.com" required />
+            </div>
+            <div class="field field-full">
+              <label for="company">Company / brand *</label>
+              <input id="company" name="company" type="text" placeholder="Your business name" required />
+            </div>
+            <div class="field field-full">
+              <label for="website">Website URL</label>
+              <input id="website" name="website" type="url" placeholder="https://yourwebsite.com" />
+            </div>
+            <div class="field">
+              <label for="phone">Phone</label>
+              <input id="phone" name="phone" type="tel" placeholder="+33 6 00 00 00 00" />
+            </div>
+            <div class="field">
+              <label for="budget">Budget range</label>
+              <select id="budget" name="budget">
+                <option value="">Select a range</option>
+                <option>Under €1,000</option>
+                <option>€1,000 – €2,500</option>
+                <option>€2,500 – €5,000</option>
+                <option>€5,000 – €10,000</option>
+                <option>€10,000+</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="service">Project priority</label>
+              <select id="service" name="service">
+                <option value="">Select an option</option>
+                <option>Premium website launch</option>
+                <option>Website redesign</option>
+                <option>Mobile app development</option>
+                <option>Landing page project</option>
+                <option>E-commerce growth project</option>
+                <option>Ongoing improvement support</option>
+                <option>Need strategic guidance</option>
+              </select>
+            </div>
+            <div class="field field-full">
+              <label for="message">Project details</label>
+              <textarea id="message" name="message" placeholder="Tell us about your goals, positioning, timeline and the kind of outcome you want your website to deliver."></textarea>
+            </div>
+            <div class="field field-full">
+              <button class="btn btn-primary" type="submit">Book my consultation</button>
+            </div>
+          </div>
+        </form>
+        <div class="alert success" id="formSuccess">Your request has been sent. We'll be in touch within 24 hours.</div>
+        <div class="alert error" id="formError">The form could not be submitted. Please try again.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TESTIMONIALS ── -->
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <h2>Why clients trust Nova Dev</h2>
+        <p>Businesses work with us when they want their website to feel more refined, more credible and more aligned with the level they are aiming for.</p>
+      </div>
+      <div class="testimonials">
+        <article class="card quote">
+          <div style="color:#f59e0b;font-size:1.1rem;margin-bottom:8px;">★★★★★</div>
+          <p>Nova Dev gave our company a much more premium digital presence. The new website feels aligned with the standard we want clients to expect.</p>
+          <strong>Director, professional services firm — Paris</strong>
+        </article>
+        <article class="card quote">
+          <div style="color:#f59e0b;font-size:1.1rem;margin-bottom:8px;">★★★★★</div>
+          <p>The structure is clearer, the brand feels stronger and the quality of incoming enquiries has noticeably improved.</p>
+          <strong>Founder, growth-focused business — Lyon</strong>
+        </article>
+        <article class="card quote">
+          <div style="color:#f59e0b;font-size:1.1rem;margin-bottom:8px;">★★★★★</div>
+          <p>We wanted a site that looked sharper and performed better. The result feels far more confident and commercially effective.</p>
+          <strong>Marketing lead, established company — London</strong>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section id="faq">
+    <div class="container">
+      <div class="section-head">
+        <h2>Frequently asked questions</h2>
+        <p>Clear answers for businesses planning a premium website project or digital upgrade.</p>
+      </div>
+      <div class="faq-grid">
+        <article class="card"><h3>Can you redesign our existing website?</h3><p>Yes. We can elevate the visual direction, improve the structure and give the site a more credible and modern presence without losing what already works.</p></article>
+        <article class="card"><h3>Do you work with French businesses?</h3><p>Absolutely. We are experienced working with companies based in France and across Europe. We offer full bilingual support (French & English) and understand the local market needs.</p></article>
+        <article class="card"><h3>Do you develop mobile apps?</h3><p>Yes. We design and build high-performance iOS and Android apps tailored to your business goals, with clean UX and strong technical execution.</p></article>
+        <article class="card"><h3>What is the best way to begin?</h3><p>Request a free website audit. We review your current site and share concrete improvements you can make — with no obligation to proceed.</p></article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <strong>Nova Dev</strong><br />
+      Premium web design, mobile app development and digital experiences for brands that want a stronger position.
+      <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;">
+        <a href="https://novadev-fr-audit.vercel.app" style="color:#a5f3fc;font-size:.83rem;text-decoration:underline;">🇫🇷 Version française</a>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="#services">Services</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#results">Results</a>
+      <a href="#contact">Book a consultation</a>
+    </div>
+  </div>
+  <div style="text-align:center;padding:14px;font-size:.78rem;color:#64748b;border-top:1px solid #e2e8f0;margin-top:12px;">
+    © 2025 Nova Dev. All rights reserved. |
+    <a href="https://novadev-fr-audit.vercel.app" style="color:#6366f1;">FR</a> |
+    Built with ♥ for ambitious businesses.
+  </div>
+</footer>
+
+<!-- ── EXIT INTENT POPUP ── -->
+<div id="exit-overlay" role="dialog" aria-modal="true" aria-label="Wait — free offer">
+  <div id="exit-box">
+    <button id="exit-close" aria-label="Close">×</button>
+    <div style="font-size:2.5rem;margin-bottom:8px;">🎁</div>
+    <h2>Wait! Before you go…</h2>
+    <p>Get a <strong>free personalised website audit</strong> — we'll review your site and send you a report with specific improvements for design, speed and conversion.</p>
+    <div class="exit-btns">
+      <a href="#contact" class="exit-yes" onclick="document.getElementById('exit-overlay').classList.remove('active')">Yes, I want my free audit</a>
+      <span class="exit-no" onclick="document.getElementById('exit-overlay').classList.remove('active')" role="button" tabindex="0">No thanks</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── FLOATING WHATSAPP ── -->
+<a id="wa-float" href="https://api.whatsapp.com/send?phone=&text=Hello%20Nova%20Dev%2C%20I%27d%20like%20to%20discuss%20a%20web%20project." target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
+
+<!-- ── POPUNDER LEAD FORM (appears after 30s) ── -->
+<div id="lead-popup">
+  <button class="lp-close" aria-label="Close" onclick="document.getElementById('lead-popup').classList.remove('active')">×</button>
+  <h4>💡 Free website tips for your business</h4>
+  <p>Get our free guide: <em>"5 mistakes that are costing your website leads"</em></p>
+  <form onsubmit="submitPopupForm(event)">
+    <input type="email" id="popupEmail" placeholder="Your email address" required />
+    <button type="submit" class="lp-btn">Send me the free guide →</button>
+  </form>
+</div>
+
+<!-- ── AI CHAT POPUP ── -->
+<div id="ai-chat-bubble" aria-label="Open chat" role="button" tabindex="0">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+  <span class="chat-badge">1</span>
+</div>
+
+<div id="ai-chat-window" role="dialog" aria-modal="true" aria-label="Chat with Nova Dev assistant" hidden>
+  <div class="chat-header">
+    <div class="chat-header-info">
+      <div class="chat-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/>
+        </svg>
+      </div>
+      <div>
+        <strong>Nova Dev Assistant</strong>
+        <span class="chat-status"><span class="chat-dot"></span> Online</span>
+      </div>
+    </div>
+    <button id="ai-chat-close" aria-label="Close chat">&times;</button>
+  </div>
+  <div class="chat-messages" id="chat-messages" role="log" aria-live="polite"></div>
+  <div class="chat-input-row">
+    <input type="text" id="chat-input" placeholder="Type your message…" autocomplete="off" aria-label="Chat message" maxlength="300" />
+    <button id="chat-send" aria-label="Send message">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script src="assets/js/main.js"></script>
+<script src="assets/js/chat.js" defer></script>
+<script>
+// ── MARKETING AUTOMATION JS ──────────────────────────────
+
+// 1. Scroll progress bar
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+  document.getElementById('scroll-bar').style.width = (scrolled * 100) + '%';
+});
+
+// 2. Animated counter for stats
+function animateCounter(el, target) {
+  let current = 0;
+  const step = Math.ceil(target / 60);
+  const timer = setInterval(() => {
+    current = Math.min(current + step, target);
+    el.textContent = current + (el.dataset.suffix || '');
+    if (current >= target) clearInterval(timer);
+  }, 30);
+}
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      animateCounter(el, parseInt(el.dataset.count));
+      observer.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-count]').forEach(el => observer.observe(el));
+
+// 3. Exit intent popup
+let exitShown = false;
+document.addEventListener('mouseleave', (e) => {
+  if (e.clientY < 10 && !exitShown) {
+    exitShown = true;
+    document.getElementById('exit-overlay').classList.add('active');
+  }
+});
+document.getElementById('exit-close').addEventListener('click', () => {
+  document.getElementById('exit-overlay').classList.remove('active');
+});
+document.getElementById('exit-overlay').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('exit-overlay'))
+    document.getElementById('exit-overlay').classList.remove('active');
+});
+
+// 4. Delayed pop-under lead form (30 seconds)
+setTimeout(() => {
+  document.getElementById('lead-popup').classList.add('active');
+}, 30000);
+
+// 5. Lead magnet form submission
+function submitLeadForm(e) {
+  e.preventDefault();
+  const email = document.getElementById('leadEmail').value;
+  // Send to FormSubmit or Brevo API
+  fetch('https://formsubmit.co/ajax/novadev.contact@gmail.com', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({ email, _subject: 'Nova Dev — Free Audit Request (EN)', _template: 'table' })
+  }).catch(() => {});
+  document.getElementById('auditLeadForm').style.display = 'none';
+  document.getElementById('leadSuccess').style.display = 'block';
+}
+
+// 6. Popup form submission
+function submitPopupForm(e) {
+  e.preventDefault();
+  const email = document.getElementById('popupEmail').value;
+  fetch('https://formsubmit.co/ajax/novadev.contact@gmail.com', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({ email, _subject: 'Nova Dev — Guide Download Request (EN)', _template: 'table' })
+  }).catch(() => {});
+  document.getElementById('lead-popup').innerHTML = '<p style="padding:10px;text-align:center;font-weight:700;color:#166534;">✅ Guide sent! Check your inbox.</p>';
+  setTimeout(() => document.getElementById('lead-popup').classList.remove('active'), 3000);
+}
+
+// 7. UTM parameter tracking (store in sessionStorage)
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  ['utm_source','utm_medium','utm_campaign','utm_content'].forEach(p => {
+    if (params.get(p)) sessionStorage.setItem(p, params.get(p));
+  });
+})();
+
+// 8. Add UTM tracking to form hidden fields
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('contactForm');
+  if (form) {
+    ['utm_source','utm_medium','utm_campaign'].forEach(p => {
+      const val = sessionStorage.getItem(p);
+      if (val) {
+        const inp = document.createElement('input');
+        inp.type = 'hidden'; inp.name = p; inp.value = val;
+        form.appendChild(inp);
+      }
+    });
+  }
+});
+</script>
 </body>
 </html>
