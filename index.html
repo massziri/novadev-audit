@@ -272,9 +272,11 @@
     #exit-close { position:absolute; top:14px; right:16px; background:none; border:none; font-size:1.4rem; cursor:pointer; color:#94a3b8; }
 
     /* ── Floating WhatsApp button ── */
-    #wa-float { position:fixed; bottom:100px; right:24px; z-index:8000; background:#25D366; color:#fff; border-radius:50%; width:52px; height:52px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(37,211,102,.5); text-decoration:none; animation:pulse 2s infinite; }
+    #wa-float { position:fixed; bottom:100px; right:98px; z-index:8000; background:#25D366; color:#fff; border-radius:50%; width:52px; height:52px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(37,211,102,.5); text-decoration:none; animation:pulse 2s infinite; }
     @keyframes pulse { 0%,100%{box-shadow:0 4px 16px rgba(37,211,102,.5)} 50%{box-shadow:0 4px 28px rgba(37,211,102,.8)} }
     #wa-float svg { width:26px; height:26px; }
+    /* ── Hide old static chat bubble (replaced by chat.js injection) ── */
+    #ai-chat-bubble, #ai-chat-window { display:none !important; }
 
     /* ── Lead magnet / newsletter strip ── */
     .lead-strip { background:linear-gradient(135deg,#1e1b4b 0%,#312e81 60%,#4338ca 100%); color:#fff; padding:56px 20px; text-align:center; }
@@ -299,6 +301,11 @@
 
     /* ── Urgency bar ── */
     .urgency-bar { background:#fef3c7; border-top:2px solid #f59e0b; border-bottom:2px solid #f59e0b; padding:11px; text-align:center; font-size:.88rem; font-weight:600; color:#92400e; }
+
+    /* ── Sticky mobile CTA bar ── */
+    #mobile-cta-bar { display:none; position:fixed; bottom:0; left:0; right:0; z-index:7500; background:#6366f1; color:#fff; padding:12px 16px; text-align:center; font-weight:700; font-size:.9rem; box-shadow:0 -4px 16px rgba(0,0,0,.15); }
+    #mobile-cta-bar a { color:#fff; text-decoration:none; }
+    @media (max-width:640px) { #mobile-cta-bar { display:block; } }
 
     /* ── Popunder lead form ── */
     #lead-popup { display:none; position:fixed; bottom:80px; left:20px; z-index:7000; background:#fff; border-radius:14px; padding:22px 24px; max-width:300px; box-shadow:0 8px 32px rgba(0,0,0,.18); border-top:4px solid #6366f1; }
@@ -414,6 +421,38 @@
       <div class="stat"><strong data-count="98">0</strong><span>% Client Satisfaction</span></div>
       <div class="stat"><strong data-count="4">0</strong><span>× Avg. Conversion Lift</span></div>
       <div class="stat"><strong data-count="48">0</strong><span>Hrs Avg. First Delivery</span></div>
+    </div>
+  </section>
+
+  <!-- ── COMPARISON TABLE ── -->
+  <section style="background:#f8fafc;padding:72px 0;">
+    <div class="container">
+      <div class="section-head">
+        <h2>Why Nova Dev stands apart</h2>
+        <p>Premium quality, strategic thinking and fair pricing — here's how we compare to typical alternatives.</p>
+      </div>
+      <div style="overflow-x:auto;margin-top:20px;">
+        <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.07);">
+          <thead>
+            <tr style="background:linear-gradient(135deg,#1e1b4b,#4338ca);color:#fff;">
+              <th style="padding:16px 20px;text-align:left;font-size:.85rem;font-weight:700;width:40%;">What matters to you</th>
+              <th style="padding:16px 20px;text-align:center;font-size:.85rem;font-weight:700;">Nova Dev</th>
+              <th style="padding:16px 20px;text-align:center;font-size:.85rem;font-weight:700;">Freelancer</th>
+              <th style="padding:16px 20px;text-align:center;font-size:.85rem;font-weight:700;">Large agency</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:14px 20px;font-weight:600;color:#1e293b;font-size:.9rem;">Strategic approach included</td><td style="padding:14px 20px;text-align:center;color:#16a34a;font-size:1.2rem;">✓</td><td style="padding:14px 20px;text-align:center;color:#dc2626;font-size:1.1rem;">✗</td><td style="padding:14px 20px;text-align:center;color:#16a34a;font-size:1.2rem;">✓</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9;background:#fafafa;"><td style="padding:14px 20px;font-weight:600;color:#1e293b;font-size:.9rem;">Premium UI/UX quality</td><td style="padding:14px 20px;text-align:center;color:#16a34a;font-size:1.2rem;">✓</td><td style="padding:14px 20px;text-align:center;color:#f59e0b;font-size:.8rem;">Varies</td><td style="padding:14px 20px;text-align:center;color:#16a34a;font-size:1.2rem;">✓</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:14px 20px;font-weight:600;color:#1e293b;font-size:.9rem;">Fast delivery (2–4 weeks)</td><td style="padding:14px 20px;text-align:center;color:#16a34a;font-size:1.2rem;">✓</td><td style="padding:14px 20px;text-align:center;color:#f59e0b;font-size:.8rem;">Varies</td><td style="padding:14px 20px;text-align:center;color:#dc2626;font-size:.8rem;">3–6 months</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9;background:#fafafa;"><td style="padding:14px 20px;font-weight:600;color:#1e293b;font-size:.9rem;">Transparent, fixed pricing</td><td style="padding:14px 20px;text-align:center;color:#16a34a;font-size:1.2rem;">✓</td><td style="padding:14px 20px;text-align:center;color:#f59e0b;font-size:.8rem;">Sometimes</td><td style="padding:14px 20px;text-align:center;color:#dc2626;font-size:1.1rem;">✗</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:14px 20px;font-weight:600;color:#1e293b;font-size:.9rem;">French &amp; English support</td><td style="padding:14px 20px;text-align:center;color:#16a34a;font-size:1.2rem;">✓</td><td style="padding:14px 20px;text-align:center;color:#f59e0b;font-size:.8rem;">Sometimes</td><td style="padding:14px 20px;text-align:center;color:#f59e0b;font-size:.8rem;">Sometimes</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9;background:#fafafa;"><td style="padding:14px 20px;font-weight:600;color:#1e293b;font-size:.9rem;">SEO &amp; performance built-in</td><td style="padding:14px 20px;text-align:center;color:#16a34a;font-size:1.2rem;">✓</td><td style="padding:14px 20px;text-align:center;color:#dc2626;font-size:1.1rem;">✗</td><td style="padding:14px 20px;text-align:center;color:#f59e0b;font-size:.8rem;">Extra cost</td></tr>
+            <tr><td style="padding:14px 20px;font-weight:600;color:#1e293b;font-size:.9rem;">Starting price</td><td style="padding:14px 20px;text-align:center;font-weight:800;color:#6366f1;">From $150</td><td style="padding:14px 20px;text-align:center;font-weight:600;color:#64748b;">$50–$500+</td><td style="padding:14px 20px;text-align:center;font-weight:600;color:#64748b;">$3,000+</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="text-align:center;margin-top:28px;"><a class="btn btn-primary" href="#contact">Start with a free audit →</a></div>
     </div>
   </section>
 
@@ -576,6 +615,110 @@
     ⚠️ Limited availability — Only <strong>3 new project slots</strong> open this month. <a href="#contact" style="color:#92400e;font-weight:700;">Reserve your spot now →</a>
   </div>
 
+  <!-- ── BEFORE / AFTER SHOWCASE ── -->
+  <section style="background:#f8fafc;padding:72px 20px;">
+    <div class="container">
+      <div class="section-head">
+        <h2>Before &amp; After — The Nova Dev Difference</h2>
+        <p>The same business. A completely different digital impression.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px;margin:0 auto;">
+        <div style="background:#fff;border:2px solid #fca5a5;border-radius:16px;padding:28px;">
+          <div style="color:#dc2626;font-weight:800;font-size:1.05rem;margin-bottom:16px;">❌ Before Nova Dev</div>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;font-size:.9rem;color:#475569;">
+            <li>🐌 PageSpeed score: <strong style="color:#dc2626">28/100</strong> — visitors bounce immediately</li>
+            <li>📵 Broken on mobile — 60%+ of traffic lost</li>
+            <li>🔍 Invisible on Google — zero page-1 rankings</li>
+            <li>💔 No clear CTA — visitors don't know what to do next</li>
+            <li>🎨 Outdated design — looks amateur, hurts credibility</li>
+            <li>📋 Generic copy — no differentiation, no conversion</li>
+          </ul>
+        </div>
+        <div style="background:#fff;border:2px solid #86efac;border-radius:16px;padding:28px;">
+          <div style="color:#16a34a;font-weight:800;font-size:1.05rem;margin-bottom:16px;">✅ After Nova Dev</div>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;font-size:.9rem;color:#475569;">
+            <li>⚡ PageSpeed score: <strong style="color:#16a34a">96/100</strong> — loads in under 1s</li>
+            <li>📱 Flawless on all devices — zero lost mobile visitors</li>
+            <li>🏆 Page 1 Google for key terms within 90 days</li>
+            <li>🎯 Crystal-clear CTA — conversion rate up 3–4×</li>
+            <li>💎 Premium design — instantly builds trust &amp; credibility</li>
+            <li>✍️ Compelling copy — aligned with your target clients</li>
+          </ul>
+        </div>
+      </div>
+      <p style="text-align:center;margin-top:32px;font-size:.95rem;color:#64748b;">Average results across our last 50 projects. <a href="#contact" style="color:#6366f1;font-weight:700;">Start your transformation →</a></p>
+    </div>
+  </section>
+
+  <!-- ── COMPARISON TABLE: NOVA DEV vs ALTERNATIVES ── -->
+  <section style="padding:72px 20px;">
+    <div class="container">
+      <div class="section-head">
+        <h2>Why choose Nova Dev over the alternatives?</h2>
+        <p>Not all web agencies deliver the same value. Here's how we compare.</p>
+      </div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:.9rem;max-width:900px;margin:0 auto;">
+          <thead>
+            <tr style="background:#1e1b4b;color:#fff;">
+              <th style="padding:14px 18px;text-align:left;border-radius:10px 0 0 0;">Criteria</th>
+              <th style="padding:14px 18px;text-align:center;background:#6366f1;">✨ Nova Dev</th>
+              <th style="padding:14px 18px;text-align:center;">Big Agency</th>
+              <th style="padding:14px 18px;text-align:center;border-radius:0 10px 0 0;">DIY Builder</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background:#f8fafc;">
+              <td style="padding:12px 18px;font-weight:600;color:#1e293b;">Price</td>
+              <td style="padding:12px 18px;text-align:center;color:#16a34a;font-weight:700;">From $150</td>
+              <td style="padding:12px 18px;text-align:center;color:#dc2626;">$5,000–$50,000</td>
+              <td style="padding:12px 18px;text-align:center;color:#d97706;">Free → looks free</td>
+            </tr>
+            <tr>
+              <td style="padding:12px 18px;font-weight:600;color:#1e293b;">Delivery time</td>
+              <td style="padding:12px 18px;text-align:center;color:#16a34a;font-weight:700;">3 days – 4 weeks</td>
+              <td style="padding:12px 18px;text-align:center;color:#dc2626;">3–6 months</td>
+              <td style="padding:12px 18px;text-align:center;color:#d97706;">Months of your time</td>
+            </tr>
+            <tr style="background:#f8fafc;">
+              <td style="padding:12px 18px;font-weight:600;color:#1e293b;">Design quality</td>
+              <td style="padding:12px 18px;text-align:center;">⭐⭐⭐⭐⭐</td>
+              <td style="padding:12px 18px;text-align:center;">⭐⭐⭐⭐</td>
+              <td style="padding:12px 18px;text-align:center;">⭐⭐</td>
+            </tr>
+            <tr>
+              <td style="padding:12px 18px;font-weight:600;color:#1e293b;">SEO built-in</td>
+              <td style="padding:12px 18px;text-align:center;color:#16a34a;font-weight:700;">✅ Always included</td>
+              <td style="padding:12px 18px;text-align:center;color:#d97706;">Extra cost</td>
+              <td style="padding:12px 18px;text-align:center;color:#dc2626;">❌ Not included</td>
+            </tr>
+            <tr style="background:#f8fafc;">
+              <td style="padding:12px 18px;font-weight:600;color:#1e293b;">Mobile performance</td>
+              <td style="padding:12px 18px;text-align:center;color:#16a34a;font-weight:700;">✅ Optimised by default</td>
+              <td style="padding:12px 18px;text-align:center;color:#d97706;">Varies</td>
+              <td style="padding:12px 18px;text-align:center;color:#dc2626;">❌ Template limits</td>
+            </tr>
+            <tr>
+              <td style="padding:12px 18px;font-weight:600;color:#1e293b;">Dedicated contact</td>
+              <td style="padding:12px 18px;text-align:center;color:#16a34a;font-weight:700;">✅ Direct WhatsApp/chat</td>
+              <td style="padding:12px 18px;text-align:center;color:#dc2626;">Account manager queue</td>
+              <td style="padding:12px 18px;text-align:center;color:#dc2626;">❌ Ticket system only</td>
+            </tr>
+            <tr style="background:#f8fafc;">
+              <td style="padding:12px 18px;font-weight:600;color:#1e293b;">Free audit included</td>
+              <td style="padding:12px 18px;text-align:center;color:#16a34a;font-weight:700;">✅ Yes, always free</td>
+              <td style="padding:12px 18px;text-align:center;color:#dc2626;">❌ Paid discovery</td>
+              <td style="padding:12px 18px;text-align:center;color:#dc2626;">❌ No audit</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="text-align:center;margin-top:32px;">
+        <a class="btn btn-primary" href="#contact" style="font-size:1rem;padding:14px 32px;">Start with a free audit →</a>
+      </div>
+    </div>
+  </section>
+
   <!-- ── WHO WE BUILD FOR ── -->
   <section>
     <div class="container">
@@ -722,17 +865,20 @@
       <div class="testimonials">
         <article class="card quote">
           <div style="color:#f59e0b;font-size:1.1rem;margin-bottom:8px;">★★★★★</div>
-          <p>Nova Dev gave our company a much more premium digital presence. The new website feels aligned with the standard we want clients to expect.</p>
+          <div style="background:#f0fdf4;border-radius:8px;padding:7px 12px;margin-bottom:12px;font-size:.81rem;font-weight:700;color:#166534;display:inline-block;">📈 +3× qualified enquiries within 6 weeks</div>
+          <p>Nova Dev gave our company a much more premium digital presence. The new website feels aligned with the standard we want clients to expect. Enquiry quality improved immediately.</p>
           <strong>Director, professional services firm — Paris</strong>
         </article>
         <article class="card quote">
           <div style="color:#f59e0b;font-size:1.1rem;margin-bottom:8px;">★★★★★</div>
-          <p>The structure is clearer, the brand feels stronger and the quality of incoming enquiries has noticeably improved.</p>
+          <div style="background:#f0fdf4;border-radius:8px;padding:7px 12px;margin-bottom:12px;font-size:.81rem;font-weight:700;color:#166534;display:inline-block;">⚡ PageSpeed: 34 → 96 in 48 hours</div>
+          <p>The structure is clearer, the brand feels stronger and the quality of incoming enquiries has noticeably improved. The speed transformation alone was worth every cent.</p>
           <strong>Founder, growth-focused business — Lyon</strong>
         </article>
         <article class="card quote">
           <div style="color:#f59e0b;font-size:1.1rem;margin-bottom:8px;">★★★★★</div>
-          <p>We wanted a site that looked sharper and performed better. The result feels far more confident and commercially effective.</p>
+          <div style="background:#f0fdf4;border-radius:8px;padding:7px 12px;margin-bottom:12px;font-size:.81rem;font-weight:700;color:#166534;display:inline-block;">🎯 Delivered 4 days ahead of schedule</div>
+          <p>We wanted a site that looked sharper and performed better. The result feels far more confident and commercially effective. The team communicated clearly throughout.</p>
           <strong>Marketing lead, established company — London</strong>
         </article>
       </div>
@@ -748,10 +894,33 @@
       </div>
       <div class="faq-grid">
         <article class="card"><h3>Can you redesign our existing website?</h3><p>Yes. We can elevate the visual direction, improve the structure and give the site a more credible and modern presence without losing what already works.</p></article>
-        <article class="card"><h3>Do you work with French businesses?</h3><p>Absolutely. We are experienced working with companies based in France and across Europe. We offer full bilingual support (French & English) and understand the local market needs.</p></article>
+        <article class="card"><h3>Do you work with French businesses?</h3><p>Absolutely. We are experienced working with companies based in France and across Europe. We offer full bilingual support (French &amp; English) and understand the local market needs.</p></article>
         <article class="card"><h3>Do you develop mobile apps?</h3><p>Yes. We design and build high-performance iOS and Android apps tailored to your business goals, with clean UX and strong technical execution.</p></article>
         <article class="card"><h3>What is the best way to begin?</h3><p>Request a free website audit. We review your current site and share concrete improvements you can make — with no obligation to proceed.</p></article>
+        <article class="card"><h3>How long does a typical project take?</h3><p>Landing pages: 3–7 days. Business websites: 2–4 weeks. E-commerce: 4–8 weeks. Mobile apps: 8–16 weeks. We share a clear timeline before work begins and keep you updated at every stage.</p></article>
+        <article class="card"><h3>Do you provide ongoing support after launch?</h3><p>Yes. All projects include post-launch support for technical issues found within 30 days. We also offer optional monthly maintenance and evolution packages.</p></article>
+        <article class="card"><h3>What do I need to prepare before starting?</h3><p>We guide you through the whole process. Ideally you'll have a rough idea of your goals and audience. We'll handle everything else — from strategy to design, development and launch.</p></article>
+        <article class="card"><h3>Is the free audit really free with no obligation?</h3><p>Completely free. We review your site and send a personalised report with specific improvements. No credit card, no hidden fees, no pressure — though we'd love to help if it makes sense.</p></article>
       </div>
+    </div>
+  </section>
+
+  <!-- ── MOBILE STICKY CTA BAR ── -->
+  <div id="mobile-cta-bar">
+    🚀 Free website audit — <a href="#contact">Claim yours →</a>
+  </div>
+
+  <!-- ── FINAL CTA BAND ── -->
+  <section style="background:linear-gradient(135deg,#1e1b4b 0%,#4338ca 100%);padding:80px 20px;text-align:center;">
+    <div class="container" style="max-width:680px;">
+      <div style="font-size:2.5rem;margin-bottom:16px;">🚀</div>
+      <h2 style="color:#fff;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:900;margin:0 0 16px;">Ready to build a website that actually works for your business?</h2>
+      <p style="color:#c7d2fe;margin:0 0 32px;font-size:1.05rem;">Start with a free audit. We'll show you exactly what's holding your current site back — then you decide what to do next.</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+        <a class="btn btn-primary" href="#contact" style="font-size:1rem;padding:15px 32px;">Get my free audit →</a>
+        <a href="https://wa.me/212665103031" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;padding:15px 28px;border-radius:10px;font-weight:700;text-decoration:none;font-size:1rem;">💬 WhatsApp us</a>
+      </div>
+      <p style="color:#818cf8;font-size:.82rem;margin-top:18px;">🔒 No spam. No obligation. GDPR compliant. &nbsp;|&nbsp; <a href="/privacy-policy.html" style="color:#a5b4fc;">Privacy Policy</a> · <a href="/terms.html" style="color:#a5b4fc;">Terms</a></p>
     </div>
   </section>
 </main>
@@ -770,12 +939,17 @@
       <a href="#pricing">Pricing</a>
       <a href="#results">Results</a>
       <a href="#contact">Book a consultation</a>
+      <a href="/privacy-policy.html">Privacy Policy</a>
+      <a href="/terms.html">Terms of Service</a>
     </div>
   </div>
   <div style="text-align:center;padding:14px;font-size:.78rem;color:#64748b;border-top:1px solid #e2e8f0;margin-top:12px;">
-    © 2025 Nova Dev. All rights reserved. |
-    <a href="https://novadev-fr-audit.vercel.app" style="color:#6366f1;">FR</a> |
-    Built with ♥ for ambitious businesses.
+    © 2026 Nova Dev. All rights reserved. &nbsp;|&nbsp;
+    <a href="/privacy-policy.html" style="color:#6366f1;">Privacy Policy</a> &nbsp;|&nbsp;
+    <a href="/terms.html" style="color:#6366f1;">Terms of Service</a> &nbsp;|&nbsp;
+    <a href="https://novadev-fr-audit.vercel.app" style="color:#6366f1;">🇫🇷 FR</a> &nbsp;|&nbsp;
+    <a href="mailto:admin@novatvhub.com" style="color:#6366f1;">admin@novatvhub.com</a> &nbsp;|&nbsp;
+    <a href="https://wa.me/212665103031" style="color:#25D366;font-weight:700;">💬 WhatsApp</a>
   </div>
 </footer>
 
