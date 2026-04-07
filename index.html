@@ -272,7 +272,8 @@
     #exit-close { position:absolute; top:14px; right:16px; background:none; border:none; font-size:1.4rem; cursor:pointer; color:#94a3b8; }
 
     /* ── Floating WhatsApp button ── */
-    #wa-float { position:fixed; bottom:100px; right:98px; z-index:8000; background:#25D366; color:#fff; border-radius:50%; width:52px; height:52px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(37,211,102,.5); text-decoration:none; animation:pulse 2s infinite; }
+    #wa-float { position:fixed; bottom:90px; right:24px; z-index:8000; background:#25D366; color:#fff; border-radius:50%; width:52px; height:52px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(37,211,102,.5); text-decoration:none; animation:pulse 2s infinite; }
+    @media (max-width:640px) { #wa-float { bottom:148px; right:16px; } }
     @keyframes pulse { 0%,100%{box-shadow:0 4px 16px rgba(37,211,102,.5)} 50%{box-shadow:0 4px 28px rgba(37,211,102,.8)} }
     #wa-float svg { width:26px; height:26px; }
     /* ── Hide old static chat bubble (replaced by chat.js injection) ── */

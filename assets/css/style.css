@@ -869,15 +869,16 @@ textarea { min-height: 120px; resize: vertical; }
   font-family: var(--font);
 }
 .chat-quick-btn:hover { background: #dbeafe; transform: translateY(-1px); }
-@media (max-width: 480px) {
+@media (max-width: 640px) {
   #ai-chat-window {
     right: 12px;
-    bottom: 88px;
+    bottom: 140px;
     width: calc(100vw - 24px);
+    max-height: calc(100vh - 180px);
   }
   #ai-chat-bubble {
     right: 16px;
-    bottom: 20px;
+    bottom: 76px;
   }
 }
 

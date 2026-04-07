@@ -33,6 +33,7 @@
   /* ── Build widget DOM ── */
   const styles = `
     #nd-chat-bubble{position:fixed;bottom:24px;right:24px;width:56px;height:56px;background:linear-gradient(135deg,#1e1b4b,#6366f1);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(99,102,241,.5);z-index:9998;transition:transform .2s,box-shadow .2s;border:none;}
+    @media(max-width:640px){#nd-chat-bubble{bottom:76px;right:16px;} #nd-chat-win{right:12px;bottom:140px;}}
     #nd-chat-bubble:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(99,102,241,.7);}
     #nd-chat-badge{position:absolute;top:-4px;right:-4px;background:#ef4444;color:#fff;font-size:11px;font-weight:700;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff;animation:nd-pulse 2s infinite;}
     @keyframes nd-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
